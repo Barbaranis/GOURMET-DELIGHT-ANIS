@@ -1,0 +1,13 @@
+#firebase
+
+serviceAccountKey.json
+node_modules/
+.env
+
+# backend/.gitignore
+
+serviceAccountKey.json
+
+backend/src/models/serviceAccountKey.json
+
+

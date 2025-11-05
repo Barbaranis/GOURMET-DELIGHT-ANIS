@@ -1,0 +1,16 @@
+# Normaliser en LF dans le repo (Windows convertira en CRLF dans le working copy)
+* text=auto eol=lf
+
+
+# Exemples de fichiers qui doivent rester CRLF (scripts Windows)
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+
+# Binaires (pas de conversion)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.ico binary
