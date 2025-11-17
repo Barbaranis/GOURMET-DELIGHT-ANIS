@@ -1,9 +1,8 @@
 
-🍽️ 
-Gourmet Delight — Backend API
+ # 🍽️ Gourmet Delight — Backend API
 Backend officiel du projet de restaurant gastronomique Gourmet Delight
 
-⭐ Introduction
+# ⭐ Introduction
 Ce dépôt contient le backend complet du projet Gourmet Delight.
 Il fournit toutes les API nécessaires au fonctionnement du site :
 Authentification (JWT + Cookies HttpOnly + CSRF)
@@ -31,8 +30,7 @@ Déploiement Docker
 
 
 
-🛠️ 
-Stack technique
+ # 🛠️ Stack technique
 Domaine
 Technologie
 Serveur
@@ -53,8 +51,7 @@ Logger
 Morgan
 
 
-📦 
-Installation
+ # 📦 Installation
 1. Cloner le projet
 git clone https://github.com/ton-compte/gourmet-delight-backend.git
 cd gourmet-delight-backend
@@ -207,8 +204,7 @@ Le backend inclut :
 
 
 
-📁 
-Structure du dossier
+ # 📁 Structure du dossier
 backend/
 ├── src/
 │   ├── config/
@@ -224,12 +220,11 @@ backend/
 ├── Dockerfile
 └── README.md
 
-👩‍💻 
-Auteur
+ # 👩‍💻 Auteur
 Développé par Anis Barbara,
 dans le cadre du Titre Professionnel Développeur Web & Web Mobile.
 
-📄 Licence
+# 📄 Licence
 Publié sous licence MIT.
 
 
