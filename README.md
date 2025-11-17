@@ -53,7 +53,7 @@ Morgan
 
  # 📦 Installation
 1. Cloner le projet
-git clone https://github.com/ton-compte/gourmet-delight-backend.git
+git clone https://github.com/Barbaranis/GOURMET-DELIGHT-ANIS.git
 cd gourmet-delight-backend
 
 2. Installer les dépendances
