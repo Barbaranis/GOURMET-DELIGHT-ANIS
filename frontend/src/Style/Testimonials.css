@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;500;700&display=swap');
+
+
+/* --------- Section globale --------- */
+.testimonial-form-section {
+  max-width: 750px;
+  margin: 60px auto;
+  padding: 30px 40px;
+  background: linear-gradient(135deg, #eae2e54e, #f2cdd8b5);
+  border-radius: 30px;
+  box-shadow: 0 8px 30px rgba(169, 82, 122, 0.2);
+  font-family: 'Poppins', sans-serif;
+  color: #4a2c3f7f;
+  position: relative;
+  overflow: hidden;
+}
+
+
+/* --------- Titre --------- */
+.testimonial-form-section h2 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.8rem;
+  text-align: center;
+  margin-bottom: 30px;
+  color: #5e1b37bd;
+  text-shadow: 1px 2px 8px rgba(176, 69, 114, 0.2);
+}
+
+
+/* --------- Message de succès --------- */
+.success-message {
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  color: #7a2f58;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(176, 69, 114, 0.15);
+}
+
+
+/* --------- Formulaire --------- */
+.testimonial-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+
+/* Labels */
+.testimonial-form label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #6d3b51;
+}
+
+
+/* Inputs / Textarea / Select */
+.testimonial-form input[type="text"],
+.testimonial-form textarea,
+.testimonial-form select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border-radius: 12px;
+  border: 2px solid #e2c7d3;
+  font-family: 'Poppins', sans-serif;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  color: #4a2c3f;
+  background: #fff;
+}
+
+
+.testimonial-form input:focus,
+.testimonial-form textarea:focus,
+.testimonial-form select:focus {
+  border-color: #b04572;
+  box-shadow: 0 0 8px rgba(176, 69, 114, 0.3);
+  outline: none;
+}
+
+
+/* Textarea */
+.testimonial-form textarea {
+  min-height: 110px;
+  resize: vertical;
+}
+
+
+/* Select étoiles */
+.testimonial-form select {
+  font-size: 1.1rem;
+}
+
+
+/* Bouton */
+.testimonial-form button {
+  margin: 25px auto 0;
+  font-family: 'Great Vibes', cursive;
+  font-size: 1.8rem;
+  background-color: #f3e2e7c7;
+  color: #7a2f58;
+  border: none;
+  border-radius: 40px;
+  padding: 16px 60px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(174, 135, 153, 0.34);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+
+.testimonial-form button:hover {
+  background-color: #d499a8;
+  transform: translateY(-2px);
+}
+
+
+/* Messages d'erreur */
+.error {
+  color: #c94f8f;
+  font-size: 0.9rem;
+  margin-top: -8px;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+
+/* --------- Responsive --------- */
+@media (max-width: 768px) {
+  .testimonial-form-section {
+    margin: 40px 20px;
+    padding: 25px 30px;
+  }
+
+
+  .testimonial-form-section h2 {
+    font-size: 2.4rem;
+  }
+
+
+  .testimonial-form button {
+    padding: 14px 40px;
+    font-size: 1.6rem;
+  }
+
+
+  .testimonial-form input,
+  .testimonial-form textarea,
+  .testimonial-form select {
+    font-size: 1rem;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .testimonial-form-section {
+    margin: 25px 10px;
+    padding: 20px;
+  }
+
+
+  .testimonial-form-section h2 {
+    font-size: 2.2rem;
+  }
+
+
+  .testimonial-form button {
+    font-size: 1.4rem;
+    padding: 12px 30px;
+  }
+
+
+  .testimonial-form input,
+  .testimonial-form textarea,
+  .testimonial-form select {
+    font-size: 0.95rem;
+    padding: 10px 12px;
+  }
+}
+
+
+

@@ -1,0 +1,185 @@
+/* ----------------------------------------- */
+/* TestimonialsCarousel.css - Gourmet Delight */
+/* ----------------------------------------- */
+
+
+/* Slide personnalisée */
+.testimonials .swiper-slide {
+  max-width: 87%;
+  margin-left:12%;
+  padding: 40px 30px;
+  background: linear-gradient(135deg, #f4d9e4, #e6c4cf);
+  border-radius: 20px;
+  box-shadow: 0 6px 25px rgba(169, 82, 122, 0.3);
+  font-family: 'Great Vibes', cursive;
+  color: #6d3b51;
+  text-align: center;
+  user-select: none;
+  letter-spacing: 0.04em;
+
+}
+
+
+/* Titre */
+.testimonials > h2 {
+  font-size: 2.8rem;
+  margin-bottom: 30px;
+  font-weight: 400;
+  text-shadow: 0 2px 4px rgba(109, 59, 81, 0.3);
+  text-align: center;
+}
+
+
+/* Blocquote styling */
+.testimonials blockquote {
+  font-style: italic;
+  font-size: 1.4rem;
+  margin: 0 20px 30px;
+  position: relative;
+  padding: 20px 30px;
+  border-left: 6px solid #a1446c;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(161, 68, 108, 0.15);
+  color: #4a2c3f;
+  line-height: 1.6;
+ 
+ 
+}
+
+
+/* Footer inside blockquote (nom + étoiles) */
+.testimonials blockquote footer {
+  margin-top: 15px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  font-style: normal;
+  color: #6d3b51;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-left: 50%;
+
+}
+
+
+/* Les étoiles */
+.testimonials blockquote footer span[role="img"] {
+  color: #d499a8;
+  font-size: 1.0rem;
+  filter: drop-shadow(0 0 1px rgba(213, 153, 168, 0.9));
+}
+
+
+/* Pagination bullets Swiper */
+.swiper-pagination-bullet {
+  width: 12px;
+  height: 12px;
+  background: #a1446c;
+  opacity: 0.4;
+  transition: opacity 0.3s ease, background-color 0.3s ease;
+  margin: 0 4px;
+}
+
+
+.swiper-pagination-bullet-active {
+  background: #6d3b51;
+  opacity: 1;
+  box-shadow: 0 0 10px #6d3b51aa;
+}
+
+
+/* --------------------------------- */
+/* 🟣 Responsive: Tablettes & Mobiles */
+/* --------------------------------- */
+@media (max-width: 768px) {
+  .testimonials .swiper-slide {
+    padding: 30px 20px;
+    margin-left: 12%;
+    width: 90%;
+
+  }
+
+
+  .testimonials > h2 {
+    font-size: 2.4rem;
+    margin-bottom: 25px;
+  }
+
+
+  .testimonials blockquote {
+    font-size: 1.2rem;
+    padding: 18px 22px;
+  }
+
+
+  .menu-button {
+    padding: 16px 94px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .testimonials {
+    padding: 20px 15px;
+  }
+
+
+  .testimonials > h2 {
+    font-size: 2.1rem;
+    margin-bottom: 20px;
+  }
+
+
+  .testimonials .swiper-slide {
+    padding: 25px 15px;
+   
+  }
+
+
+  .testimonials blockquote {
+    font-size: 1.05rem;
+    padding: 15px 18px;
+ 
+  }
+
+
+  .testimonials blockquote footer {
+    font-size: 0.80rem;
+    gap: 8px;
+    margin-left: 0%;
+
+  }
+
+  .testimonials blockquote footer span[role="img"] {
+    color: #d499a8;
+    font-size: 0.5rem;
+    filter: drop-shadow(0 0 1px rgba(213, 153, 168, 0.9));
+  }
+
+  .swiper-pagination-bullet {
+    width: 10px;
+    height: 10px;
+  }
+
+
+  .testimonials blockquote footer {
+    margin-top: 15px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    color: #6d3b51;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.4rem;
+  }
+  .testimonials.sectin p {
+    font-size: 1.4rem;
+  }
+  .button {
+    margin-left: 5%;
+  }
+}
+

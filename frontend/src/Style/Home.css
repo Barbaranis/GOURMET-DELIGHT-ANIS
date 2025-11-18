@@ -1,0 +1,413 @@
+/* ------------------------------ */
+/* CSS Home - Gourmet Delight     */
+/* Élégant, raffiné, responsive   */
+/* ------------------------------ */
+
+/* Polices */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap');
+
+:root {
+  --color-primary: #6d3b51;
+  --color-secondary: #d7c1cb;
+  --color-bg-gradient-start: #f7e8e8;
+  --color-bg-gradient-end: #fdf6f6;
+  --color-text: #4a2c3f;
+  --color-text-light: #7a5665;
+  --color-accent: #b04572;
+  --color-shadow: rgba(109, 59, 81, 0.15);
+}
+
+/* Reset + base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom, var(--color-bg-gradient-start), var(--color-bg-gradient-end));
+  color: var(--color-text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px 15px;
+
+
+}
+
+
+
+
+
+
+
+
+ 
+
+
+/* TYPOGRAPHIE */
+h1, h2, h3, .reservation-button {
+  font-family: 'Great Vibes', cursive;
+  color: var(--color-primary);
+  text-shadow: 0 2px 5px var(--color-shadow);
+  user-select: none;
+}
+
+h1 {
+  font-size: 3.8rem;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 2.5rem;
+  margin-bottom: 25px;
+  position: relative;
+}
+
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 4px;
+  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+  opacity: 0.2;
+  border-radius: 20px;
+}
+
+h3 {
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+
+p {
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  color: var(--color-text-light);
+}
+
+/* ---------------- HERO ---------------- */
+
+.hero-banner {
+  position: relative;
+  width: 100%;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 1;
+  margin-top: -50%;
+  margin-top: 2%;
+}
+
+
+.hero-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../assets/home.jpg');
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.6); /* fonce légèrement pour améliorer contraste texte */
+  z-index: 1;
+border-radius: 5%;
+
+
+
+  z-index: 1;
+}
+
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  color: white;
+}
+
+
+.hero-content h1 {
+  font-size: 4rem;
+  margin: 0;
+  font-family: 'Great Vibes', cursive;
+  text-shadow: 5px 5px 5px rgba(248, 245, 245, 0.276);
+  color: #ffffff;
+}
+
+
+.hero-content p {
+  font-size: 1.5rem;
+  margin-top: 10px;
+  color: #ffffff;
+  text-shadow: 5px 5px 5px rgba(236, 228, 228, 0.534);
+}
+
+
+
+/* ----------- INTRODUCTION ----------- */
+.intro {
+  text-align: center;
+  padding: 60px 20px;
+  background: linear-gradient(135deg, var(--color-bg-gradient-start), var(--color-secondary));
+  border-radius: 20px;
+  box-shadow: 0 4px 25px var(--color-shadow);
+}
+
+/* ----------- SPÉCIALITÉS ----------- */
+.specialties {
+  padding: 4rem 2rem;
+  background: linear-gradient(to bottom, #fdf6f6, #f7e8e8);
+  transition: opacity 0.9s ease, transform 2s ease;
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.specialties.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.specialties-title {
+  text-align: center;
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.9rem;
+  color: var(--color-primary);
+  margin-bottom: 3rem;
+}
+
+.specialties-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  justify-items: center;
+  width: 90%;
+  margin-left: 6%;
+}
+
+.specialty-card {
+  background-color: #fff;
+  border-radius: 1.5rem;
+  box-shadow: 0 8px 24px rgba(109, 59, 81, 0.12);
+  overflow: hidden;
+  text-align: center;
+  transition: transform 0.3s ease;
+  max-width: 360px;
+}
+
+.specialty-card:hover {
+  transform: translateY(-5px);
+}
+
+.specialty-card img {
+  width: 100%;
+  height: 240px; /* Hauteur identique pour toutes les images */
+  object-fit: cover; /* Recadrage intelligent sans déformation */
+  transition: transform 0.4s ease, filter 0.3s ease;
+  border-bottom: 1px solid #eee;
+}
+
+
+.specialty-card:hover img {
+  transform: scale(1.03); /* Zoom léger au survol */
+  filter: brightness(1.05); /* Un petit éclat raffiné */
+}
+
+
+
+.specialty-content {
+  padding: 1.5rem;
+}
+
+.specialty-content h3 {
+  font-size: 2.0rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.specialty-content p {
+  font-size: 1rem;
+  color: var(--color-text);
+}
+
+.menu-button {
+  display: block;
+  margin: 3rem auto 0;
+  padding: 0.8rem 2rem;
+  font-weight: bold;
+  background-color: var(--color-primary);
+  color: #fff;
+  border-radius: 2rem;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.menu-button:hover {
+  background-color: var(--color-accent);
+}
+
+/* ----------- BOUTON MENU ----------- */
+.menu-button {
+  display: inline-block;
+  margin-top: 40px;
+  padding: 12px 30px;
+  background-color: transparent;
+  border: 2px solid var(--color-primary);
+  color: var(--color-primary);
+  border-radius: 30px;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  margin-left: 40%;
+}
+
+.menu-button:hover {
+  background-color: var(--color-primary);
+  color: #fff;
+}
+
+/* ----------- RÉSERVATION ----------- */
+.reservation {
+  text-align: center;
+  background: linear-gradient(135deg, #f9f0f3, #fdeef1);
+  border: 1px solid #e2c2ca;
+  padding: 60px 40px;
+  border-radius: 25px;
+  margin-top: 60px;
+}
+
+.reservation-button {
+  display: inline-block;
+  margin-top: 20px;
+  background-color: var(--color-primary);
+  color: white;
+  padding: 14px 40px;
+  border-radius: 30px;
+  font-size: 1.4rem;
+  transition: background-color 0.3s ease;
+}
+
+.reservation-button:hover {
+  background-color: #4a2c3f;
+}
+
+/* ----------- TÉMOIGNAGES ----------- */
+.testimonials {
+  margin-top: 80px;
+}
+
+/* ------------- ANIMATIONS ------------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ------------ RESPONSIVE ------------- */
+@media (max-width: 900px) {
+  .specialties {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .specialty-item {
+    width: 90%;
+  }
+
+  .hero-content h1 {
+    font-size: 2.5rem;
+  }
+
+  .reservation-button {
+    width: 80%;
+  }
+  .menu-button {
+    padding: 16px 94px;
+    margin-left: 0%;
+  }
+}
+/* ----------- RESPONSIVE SPÉCIALITÉS ----------- */
+@media (max-width: 1024px) {
+  .specialties-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+  }
+
+
+  .specialty-card {
+    max-width: 100%;
+  }
+
+
+  .menu-button {
+    margin-left: 0;
+    text-align: center;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .specialties {
+    padding: 2rem 1rem;
+  }
+
+
+  .specialty-card img {
+    height: 200px; /* un peu moins haut sur mobile */
+  }
+
+
+  .specialty-content h3 {
+    font-size: 1.2rem;
+  }
+
+
+  .specialty-content p {
+    font-size: 0.95rem;
+  }
+
+
+  .menu-button {
+    width: 100%;
+    font-size: 1rem;
+    padding: 12px;
+    margin-top: 30px;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .hero-content h1 {
+    font-size: 2.2rem;
+  }
+
+
+  .hero-content p {
+    font-size: 1.1rem;
+  }
+
+
+  .specialty-card img {
+    height: 180px;
+  }
+
+
+  .specialty-content {
+    padding: 1rem;
+  }
+}
+

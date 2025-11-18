@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&display=swap');
+
+
+/* ----------- HEADER GLOBAL ----------- */
+header {
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+  padding: 20px 40px;
+  background: #fffafc;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+
+/* ----------- CONTENEUR DU CONTENU ----------- */
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1300px;
+  margin: 0 auto;
+  position: relative;
+}
+
+
+/* ----------- LOGO À GAUCHE ----------- */
+.logo {
+  height: 66px;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(214, 200, 200, 0.8);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.logo:hover {
+  transform: scale(1.04);
+  box-shadow: 0 6px 20px rgba(180, 69, 114, 0.2);
+}
+
+
+/* ----------- NAVIGATION ----------- */
+.nav {
+  display: flex;
+  gap: 35px;
+  align-items: center;
+}
+
+
+.nav a {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  color: #1b020d;
+  text-decoration: none;
+  font-weight: 500;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+
+.nav a::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background-color: #b04572;
+  transition: width 0.3s ease;
+}
+
+
+.nav a:hover,
+.nav a:focus {
+  color: #b04572;
+  outline: none;
+}
+
+
+.nav a:hover::after,
+.nav a:focus::after {
+  width: 100%;
+}
+
+
+/* ----------- RESPONSIVE ----------- */
+@media screen and (max-width: 768px) {
+  .header-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    text-align: center;
+  }
+
+
+  .nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+
+  .logo {
+    align-self: flex-start;
+    margin-bottom: 0;
+ 
+  }
+}
+

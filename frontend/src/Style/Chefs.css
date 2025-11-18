@@ -1,0 +1,273 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Merriweather:wght@300;700&family=Poppins:wght@300;500;700&display=swap');
+
+
+/* --------- Page globale --------- */
+.chefs-page {
+  padding: 3rem 1.5rem;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom, #fef4f7, #f8e9ec);
+  color: #4a2c3f;
+  min-height: 100vh;
+}
+
+
+.chefs-page h1 {
+  text-align: center;
+  margin-bottom: 3.5rem;
+  font-family: 'Great Vibes', cursive;
+  font-size: 3.2rem;
+  color: #742f4c;
+  text-shadow: 1px 1px 2px rgba(176, 69, 114, 0.15);
+}
+
+
+/* --------- Grille des cartes --------- */
+.chefs-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2.8rem;
+}
+
+
+/* --------- Carte individuelle --------- */
+.chef-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  padding: 2rem 1.5rem;
+  width: 50%;
+  text-align: center;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+
+.chef-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.15);
+}
+
+
+/* --------- Image du chef --------- */
+.chef-img {
+  width: 35%;
+  height: 70%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #b0457292;
+  margin-bottom: 1rem;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease;
+}
+
+
+.chef-card:hover .chef-img {
+  transform: scale(1.05);
+}
+
+
+/* --------- Nom du chef --------- */
+.chef-name {
+  font-family: 'Great Vibes', cursive;
+  font-size: 1.7rem;
+  color: #512034;
+  margin-bottom: 0.3rem;
+}
+
+
+/* --------- Spécialité --------- */
+.chef-specialite {
+  font-size: 1rem;
+  color: #1d0710;
+  margin-bottom: 1rem;
+}
+
+
+/* --------- Bouton mobile --------- */
+.voir-plus {
+  background-color: #742d4bb7;
+  color: white;
+  border: none;
+  padding: 9px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+
+.voir-plus:hover {
+  background-color: #943760;
+  transform: scale(1.05);
+}
+
+
+/* --------- Popup au hover desktop --------- */
+.chef-hover-detail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.744);
+  padding: 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  animation: slideDown 0.3s ease-out;
+  overflow-y: auto;
+  font-size: 0.95rem;
+  color: #271821;
+  line-height: 1.5;
+}
+
+
+/* --------- Animation popin --------- */
+@keyframes slideDown {
+  from { transform: translateY(-15px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+
+/* --------- Section des créations --------- */
+.chef-creations {
+  margin-top: 1rem;
+  padding-left: 1.2rem;
+  font-size: 0.92rem;
+  color: #3a1b28;
+}
+
+
+.chef-creations li {
+  margin-bottom: 0.6rem;
+  list-style-type: "🍽 ";
+  padding-left: 0.3rem;
+}
+
+
+.chef-creations li strong {
+  color: #742f4c;
+  font-weight: 600;
+}
+
+
+/* --------- Popup mobile --------- */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+
+.popup-content {
+  background: white;
+  padding: 2.5rem 2rem;
+  border-radius: 24px;
+  max-width: 90%;
+  max-height: 85%;
+  overflow-y: auto;
+  position: relative;
+  animation: fadeIn 0.3s ease-in;
+  box-shadow: 0 25px 40px rgba(0, 0, 0, 0.25);
+  text-align: left;
+  color: #4a2c3f;
+}
+
+
+.popup-content h2 {
+  font-family: 'Great Vibes', cursive;
+  color: #b04572;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+
+.popup-content p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+
+/* --------- Créations popup --------- */
+.popup-content ul.chef-creations {
+  margin-top: 0.5rem;
+}
+
+
+/* --------- Bouton de fermeture --------- */
+.close-btn {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #b04572;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+
+.close-btn:hover {
+  color: #943760;
+}
+
+
+/* --------- Animation fade popup mobile --------- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+
+/* --------- Responsive optimisé --------- */
+@media (max-width: 600px) {
+  .chef-card {
+    width: 90%;
+    padding: 1.5rem;
+  }
+
+
+  .chef-img {
+    width: 120px;
+    height: 120px;
+  }
+
+
+  .chef-name {
+    font-size: 1.5rem;
+  }
+
+
+  .chef-specialite {
+    font-size: 0.9rem;
+  }
+
+
+  .voir-plus {
+    font-size: 0.85rem;
+  }
+
+
+  .popup-content {
+    padding: 1.5rem;
+  }
+
+
+  .chef-creations {
+    font-size: 0.85rem;
+  }
+}
+

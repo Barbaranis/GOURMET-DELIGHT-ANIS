@@ -1,0 +1,43 @@
+.politique-page {
+    padding: 2rem;
+    font-family: 'Poppins', sans-serif;
+    max-width: 900px;
+    margin: auto;
+    color: var(--color-text, #4a2c3f);
+    line-height: 1.6;
+  }
+  
+  
+  .politique-page h1,
+  .politique-page h2 {
+    color: var(--color-primary, #6d3b51);
+  }
+  
+  
+  .politique-page ul {
+    margin-left: 1.5rem;
+    list-style: disc;
+  }
+  
+  
+  .signature-politique {
+    margin-top: 3rem;
+    font-style: italic;
+    text-align: center;
+    color: var(--color-text-light, #7a5665);
+  }
+  
+  
+  @media screen and (max-width: 600px) {
+    .politique-page {
+      padding: 1rem;
+    }
+    .politique-page h1 {
+      font-size: 1.6rem;
+    }
+    .politique-page h2 {
+      font-size: 1.2rem;
+    }
+  }
+  
+  

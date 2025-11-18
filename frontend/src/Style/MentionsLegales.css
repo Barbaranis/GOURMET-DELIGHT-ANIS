@@ -1,0 +1,56 @@
+.mentions-legales {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    color: var(--color-text);
+    font-family: 'Poppins', sans-serif;
+    line-height: 1.7;
+  }
+  
+  .mentions-legales h1{
+    margin-left: 30%;
+    margin-bottom: 20%;
+
+  }
+
+
+ 
+  .mentions-legales h2 {
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+  }
+  
+  
+  .mentions-legales section {
+    margin-bottom: 2rem;
+  }
+  
+  
+  .mentions-legales a {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+  
+  
+  .footer-note {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 3rem;
+    color: var(--color-text-light);
+  }
+  
+  
+  @media screen and (max-width: 600px) {
+    .mentions-legales {
+      padding: 1rem;
+    }
+    .mentions-legales h1 {font-size: 300%;
+    margin-left: 10%;
+    margin-bottom: 30%;
+    
+    
+    }
+
+  }
+  
+  

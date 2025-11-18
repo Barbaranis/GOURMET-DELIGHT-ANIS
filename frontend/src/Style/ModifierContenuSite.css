@@ -1,0 +1,131 @@
+.modifier-contenu {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: #fff0f6;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: 'Georgia', serif;
+  }
+  
+  
+  .modifier-contenu h2 {
+    text-align: center;
+    color: #b30059;
+    margin-bottom: 2rem;
+    font-size: 2.2rem;
+  }
+  
+  
+  label {
+    display: block;
+    margin-top: 1.5rem;
+    font-weight: bold;
+    color: #660033;
+    font-size: 1rem;
+  }
+  
+  
+  textarea,
+  input {
+    width: 100%;
+    padding: 0.8rem;
+    margin-top: 0.4rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+  }
+  
+  
+  textarea:focus,
+  input:focus {
+    border-color: #cc3366;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(204, 51, 102, 0.15);
+  }
+  
+  
+  .preview-block {
+    margin-top: 0.5rem;
+    background-color: #fff;
+    border-left: 4px solid #cc3366;
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    color: #444;
+    font-style: italic;
+  }
+  
+  
+  button {
+    margin-top: 2rem;
+    padding: 0.8rem 2rem;
+    background-color: #885a69d8;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  
+  button:hover {
+    background-color: #9b5e7d;
+    color: black;
+  }
+  
+  
+  button:focus {
+    outline: 2px solid #000;
+    outline-offset: 3px;
+  }
+  
+  
+  .message-feedback {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+    background-color: #e6ffe6;
+    color: #006600;
+  }
+  
+  
+  .message-feedback.error {
+    background-color: #ffe6e6;
+    color: #990000;
+  }
+  
+  
+  /* 📱 Responsive */
+  @media (max-width: 600px) {
+    .modifier-contenu {
+      padding: 1rem;
+    }
+  
+  
+    .modifier-contenu h2 {
+      font-size: 1.6rem;
+    }
+  
+  
+    label {
+      font-size: 0.95rem;
+    }
+  
+  
+    textarea,
+    input {
+      font-size: 0.95rem;
+    }
+  }
+  
+  

@@ -1,0 +1,113 @@
+.statistiques-page {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: auto;
+    background-color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    color: #333;
+  }
+  
+  
+  .statistiques-page h1 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #222;
+  }
+  
+  
+  /* Tableau stylé */
+  .statistiques-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  
+  /* En-têtes */
+  .statistiques-table th {
+    background-color: #f2e8e4;
+    color: #222;
+    text-align: left;
+    padding: 1rem;
+    font-weight: 600;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  
+  /* Lignes du tableau */
+  .statistiques-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+  }
+  
+  
+  /* Une ligne sur deux avec un fond différent */
+  .statistiques-table tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  
+  
+  /* Badge top chef */
+  .top-chef-badge {
+    margin-left: 0.5rem;
+    color: #e25822;
+    font-size: 1.2rem;
+    vertical-align: middle;
+  }
+  
+  
+  /* Accessibilité : focus visible */
+  .statistiques-table th:focus,
+  .statistiques-table td:focus {
+    outline: 2px solid #007acc;
+    outline-offset: 2px;
+  }
+  
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .statistiques-table,
+    .statistiques-table thead,
+    .statistiques-table tbody,
+    .statistiques-table th,
+    .statistiques-table td,
+    .statistiques-table tr {
+      display: block;
+    }
+  
+  
+    .statistiques-table thead tr {
+      display: none;
+    }
+  
+  
+    .statistiques-table tr {
+      margin-bottom: 1rem;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 0.75rem;
+      background-color: #fff;
+    }
+  
+  
+    .statistiques-table td {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid #eee;
+    }
+  
+  
+    .statistiques-table td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      color: #666;
+    }
+  }
+  
+  

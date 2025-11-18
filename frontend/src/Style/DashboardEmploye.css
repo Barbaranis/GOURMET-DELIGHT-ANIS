@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+
+:root {
+  --rose: #a52a2a;
+  --rose-clair: #ffe4e1;
+  --rose-bg: #fffdfd;
+  --rose-bouton: #d6336c;
+  --rose-hover: #b02a53;
+  --text-dark: #333;
+  --ombre-douce: rgba(0, 0, 0, 0.08);
+}
+
+
+.dashboard-employe {
+  max-width: 960px;
+  margin: 4rem auto;
+  padding: 2.5rem;
+  background: var(--rose-bg);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px var(--ombre-douce);
+  font-family: 'Poppins', sans-serif;
+  text-align: center;
+  color: var(--text-dark);
+}
+
+
+.dashboard-employe h2 {
+  font-size: 2.4rem;
+  color: var(--rose);
+  margin-bottom: 0.5rem;
+}
+
+
+.dashboard-employe h3 {
+  font-size: 1.3rem;
+  color: #444;
+  margin-bottom: 2rem;
+}
+
+
+.dashboard-employe h3 span {
+  font-weight: bold;
+  color: var(--rose);
+  background-color: var(--rose-clair);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+
+.welcome-box {
+  background: #fff5f5;
+  border-left: 5px solid #f08080;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2.5rem;
+  font-style: italic;
+  color: #555;
+  text-align: left;
+}
+
+
+.dashboard-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+
+
+.dashboard-section button {
+  background-color: var(--rose-bouton);
+  color: #fff;
+  border: none;
+  padding: 0.9rem 1.8rem;
+  font-size: 1.05rem;
+  font-weight: 500;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+
+.dashboard-section button:hover,
+.dashboard-section button:focus {
+  background-color: var(--rose-hover);
+  transform: scale(1.04);
+  outline: none;
+}
+
+
+.dashboard-section button:focus-visible {
+  outline: 2px dashed #ffb6c1;
+  outline-offset: 3px;
+}
+
+
+.forbidden {
+  color: #c00;
+  background-color: #ffe6e6;
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  max-width: 600px;
+  margin: 3rem auto;
+  text-align: center;
+}
+
+
+@media (max-width: 768px) {
+  .dashboard-employe {
+    padding: 2rem 1.2rem;
+  }
+
+
+  .dashboard-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+
+  .dashboard-section button {
+    width: 100%;
+    max-width: 300px;
+    font-size: 1rem;
+  }
+}
+

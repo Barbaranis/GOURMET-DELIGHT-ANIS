@@ -1,0 +1,225 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap');
+
+
+:root {
+  --color-primary: #6d3b51;
+  --color-secondary: #d7c1cb;
+  --color-bg: #f9f0f3;
+  --color-text: #4a2c3f;
+  --color-error: #c94f8f;
+  --color-accent: #b04572;
+  --radius: 16px;
+}
+
+
+/* ------------------------ */
+/* 🔁 RESET + BASE TYPOGRAPHY */
+/* ------------------------ */
+
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+
+body, html, #root {
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+}
+
+
+/* ------------------------ */
+/* 🎯 CONTAINER PRINCIPAL */
+/* ------------------------ */
+
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 1rem;
+  background: radial-gradient(circle at top left, #ffffff, #fdf6f6);
+}
+
+
+/* ------------------------ */
+/* 🧾 FORMULAIRE LOGIN */
+/* ------------------------ */
+
+
+.login-form {
+  background: #fff;
+  padding: 2.8rem 3.4rem;
+  border-radius: 28px;
+  box-shadow: 0 15px 40px rgba(109, 59, 81, 0.15);
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  animation: fadeIn 0.4s ease-out;
+}
+
+
+.login-form h1 {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  color: var(--color-primary);
+  margin-bottom: 2rem;
+  text-shadow: 0 3px 10px rgba(109, 59, 81, 0.2);
+}
+
+
+/* ------------------------ */
+/* 🏷️ CHAMPS & ÉTIQUETTES */
+/* ------------------------ */
+
+
+.login-form label {
+  display: block;
+  text-align: left;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: 1.05rem;
+}
+
+
+.login-form input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.1rem;
+  border: 2px solid var(--color-secondary);
+  border-radius: var(--radius);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  color: var(--color-text);
+  background-color: #fff;
+}
+
+
+.login-form input:focus-visible {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 10px rgba(109, 59, 81, 0.25);
+  outline: none;
+}
+
+
+/* ------------------------ */
+/* ⚠️ MESSAGES D'ERREUR */
+/* ------------------------ */
+
+
+.error {
+  color: var(--color-error);
+  font-size: 0.88rem;
+  font-weight: 600;
+  margin: -0.5rem 0 1rem 0;
+  text-align: left;
+}
+
+
+[aria-live] {
+  min-height: 1.2rem;
+}
+
+
+/* ------------------------ */
+/* ✅ BOUTON */
+/* ------------------------ */
+
+
+.login-form button {
+  font-family: 'Great Vibes', cursive;
+  font-size: clamp(1.8rem, 3vw, 2rem);
+  background-color: var(--color-primary);
+  color: #fff9fb;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 0;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.35s ease, transform 0.2s ease;
+  box-shadow: 0 6px 22px rgba(202, 108, 149, 0.3);
+}
+
+
+.login-form button:hover,
+.login-form button:focus-visible {
+  background-color: var(--color-secondary);
+  color: var(--color-primary);
+  box-shadow: 0 0 24px rgba(232, 226, 229, 0.9);
+  transform: translateY(-1px);
+  outline: none;
+}
+
+
+/* ------------------------ */
+/* 🌀 RECAPTCHA BOX */
+/* ------------------------ */
+
+
+.g-recaptcha {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+
+/* ------------------------ */
+/* 🎞️ ANIMATION APPARITION */
+/* ------------------------ */
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+
+/* ------------------------ */
+/* 📱 RESPONSIVE DESIGN */
+/* ------------------------ */
+
+
+@media (max-width: 600px) {
+  .login-form {
+    padding: 2rem 1.5rem;
+  }
+
+
+  .login-form input {
+    padding: 0.8rem;
+    font-size: 0.95rem;
+  }
+
+
+  .login-form button {
+    padding: 12px 0;
+  }
+}
+
+
+@media (max-width: 360px) {
+  .login-form h1 {
+    font-size: 2.3rem;
+  }
+}
+
+
+
+
+
+
+

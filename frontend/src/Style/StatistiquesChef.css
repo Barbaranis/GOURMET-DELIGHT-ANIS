@@ -1,0 +1,65 @@
+:root {
+    --rose-fonce: #a41661;
+    --rose-pale: #fff7fa;
+    --ombre-douce: rgba(0, 0, 0, 0.05);
+  }
+  
+  
+  .statistiques-chef {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: var(--rose-pale);
+    border-radius: 12px;
+    box-shadow: 0 0 10px var(--ombre-douce);
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  
+  .statistiques-chef h2 {
+    text-align: center;
+    color: var(--rose-fonce);
+    margin-bottom: 2rem;
+  }
+  
+  
+  .statistiques-chef table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  
+  .statistiques-chef th,
+  .statistiques-chef td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  
+  .statistiques-chef th {
+    background-color: #f9dbe9;
+    color: var(--rose-fonce);
+    font-weight: 600;
+  }
+  
+  
+  .statistiques-chef td {
+    font-size: 1.1rem;
+  }
+  
+  
+  @media (max-width: 600px) {
+    .statistiques-chef {
+      padding: 1rem;
+    }
+  
+  
+    .statistiques-chef th,
+    .statistiques-chef td {
+      padding: 0.8rem;
+      font-size: 0.95rem;
+    }
+  }
+  
+  

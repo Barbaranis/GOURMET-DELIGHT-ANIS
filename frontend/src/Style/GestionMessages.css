@@ -1,0 +1,230 @@
+:root {
+    --color-principal: #b03060;
+    --color-secondaire: #fef2f6;
+    --color-texte: #333;
+    --color-reponse: #f1f8f4;
+    --color-reponse-bord: #4caf50;
+    --color-delete: #e35656;
+    --color-delete-hover: #760808;
+    --font-family: 'Segoe UI', sans-serif;
+  }
+  
+  
+  
+  
+  /* Conteneur global */
+  .gestion-messages {
+    padding: 2rem 1rem;
+    max-width: 1000px;
+    margin: 0 auto;
+    font-family: var(--font-family);
+  }
+  
+  
+  
+  
+  /* Titre principal */
+  .gestion-messages h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    font-size: 2.4rem;
+    color: var(--color-principal);
+    position: relative;
+  }
+  
+  
+  .gestion-messages h2::before {
+    content: "📬";
+    position: absolute;
+    top: -1.6rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2rem;
+  }
+  
+  
+  
+  
+  /* Liste des messages */
+  .message-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  
+  
+  
+  /* Carte message */
+  .message-item {
+    background-color: #fff;
+    border-left: 6px solid var(--color-principal);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+  
+  
+  .message-item:hover {
+    transform: translateY(-2px);
+  }
+  
+  
+  
+  
+  /* Contenu texte */
+  .message-item p {
+    margin: 0.4rem 0;
+    line-height: 1.6;
+    color: var(--color-texte);
+  }
+  
+  
+  .message-item strong {
+    color: #5c0a2b;
+  }
+  
+  
+  .message-content {
+    font-size: 1.1rem;
+  }
+  
+  
+  .message-date {
+    font-size: 0.9rem;
+    color: #777;
+  }
+  
+  
+  
+  
+  /* Email clicable */
+  .message-item a {
+    color: var(--color-principal);
+    text-decoration: none;
+  }
+  
+  
+  .message-item a:hover {
+    text-decoration: underline;
+  }
+  
+  
+  
+  
+  /* Réponse */
+  .message-response {
+    background-color: var(--color-reponse);
+    padding: 1rem 1.2rem;
+    border-left: 4px solid var(--color-reponse-bord);
+    border-radius: 10px;
+    margin-top: 1.2rem;
+    color: #2e7d32;
+  }
+  
+  
+  .message-response blockquote {
+    margin: 0.5rem 0;
+    font-style: italic;
+    color: #1b5e20;
+  }
+  
+  
+  
+  
+  /* Formulaire réponse */
+  .response-form {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  
+  .response-form textarea {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    resize: vertical;
+    transition: border-color 0.3s;
+    font-family: inherit;
+  }
+  
+  
+  .response-form textarea:focus {
+    border-color: var(--color-principal);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(176, 48, 96, 0.15);
+  }
+  
+  
+  .response-form button {
+    align-self: flex-start;
+    background-color: var(--color-principal);
+    color: white;
+    border: none;
+    padding: 0.7rem 1.4rem;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  
+  .response-form button:hover,
+  .response-form button:focus {
+    background-color: #8a254a;
+    outline: none;
+  }
+  
+  
+  
+  
+  /* Supprimer */
+  .delete-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--color-delete);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+  }
+  
+  
+  .delete-button:hover,
+  .delete-button:focus {
+    color: var(--color-delete-hover);
+    outline: none;
+  }
+  
+  
+  
+  
+  /* Responsive */
+  @media (max-width: 640px) {
+    .message-item {
+      padding: 1.4rem;
+    }
+  
+  
+    .response-form button {
+      align-self: stretch;
+      text-align: center;
+    }
+  
+  
+    .message-response {
+      font-size: 0.95rem;
+    }
+  }
+  
+  

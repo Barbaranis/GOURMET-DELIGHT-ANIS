@@ -1,0 +1,218 @@
+/* -------- Variables de style -------- */
+:root {
+  --rose-principal: #b85c8e;
+  --rose-clair: #fff0f6;
+  --rose-foncé: #9b4c7a;
+  --fond-card: #fff6fb;
+  --gris-border: #ddd;
+  --rouge: #ff5c5c;
+  --rouge-hover: #e33c3c;
+  --font-stack: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+
+
+
+/* -------- Container global -------- */
+.gestion-employes {
+  padding: 2rem 1rem;
+  max-width: 960px;
+  margin: auto;
+  font-family: var(--font-stack);
+}
+
+
+
+
+/* -------- Titres -------- */
+.gestion-employes h2 {
+  color: var(--rose-principal);
+  margin-bottom: 1rem;
+  font-size: 1.8rem;
+  text-align: center;
+  position: relative;
+}
+
+
+.gestion-employes h2::after {
+  content: "";
+  display: block;
+  height: 3px;
+  width: 60px;
+  margin: 8px auto 0;
+  background-color: var(--rose-principal);
+  border-radius: 2px;
+}
+
+
+
+
+/* -------- Formulaire d’ajout -------- */
+.form-ajout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  background-color: var(--rose-clair);
+  padding: 2rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
+}
+
+
+.form-ajout input,
+.form-ajout select {
+  flex: 1 1 280px;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--gris-border);
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  color: #4a2c3f;
+}
+
+
+.form-ajout input:focus,
+.form-ajout select:focus {
+  border-color: var(--rose-principal);
+  box-shadow: 0 0 6px rgba(184, 92, 142, 0.3);
+  outline: none;
+}
+
+
+
+
+/* -------- Bouton ajouter -------- */
+.form-ajout button {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--rose-principal);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  flex: 1 1 200px;
+}
+
+
+.form-ajout button:hover:not(:disabled) {
+  background-color: var(--rose-foncé);
+}
+
+
+.form-ajout button:disabled {
+  background-color: #e3b3cf;
+  cursor: not-allowed;
+}
+
+
+
+
+/* -------- Message de feedback -------- */
+.feedback {
+  margin: 1rem 0;
+  font-weight: bold;
+  color: #4a2c3f;
+  background-color: #fbeaf2;
+  border-left: 5px solid var(--rose-principal);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  animation: fadeIn 0.4s ease-in;
+}
+
+
+
+
+/* -------- Liste des employés -------- */
+.liste-employes {
+  list-style: none;
+  padding: 0;
+  margin-top: 1.5rem;
+}
+
+
+.liste-employes li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--fond-card);
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+
+
+
+
+/* -------- Badge rôle -------- */
+.liste-employes strong {
+  background-color: #f7d2e7;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: var(--rose-foncé);
+  margin: 0 6px;
+}
+
+
+
+
+/* -------- Bouton de suppression -------- */
+.btn-delete {
+  background-color: var(--rouge);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 0.9rem;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+
+.btn-delete:hover {
+  background-color: var(--rouge-hover);
+}
+
+
+
+
+/* -------- Responsive Mobile -------- */
+@media (max-width: 720px) {
+  .form-ajout {
+    flex-direction: column;
+  }
+
+
+  .form-ajout input,
+  .form-ajout select,
+  .form-ajout button {
+    flex: 1 1 100%;
+  }
+
+
+  .liste-employes li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+}
+
+
+
+
+/* -------- Animation -------- */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

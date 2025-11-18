@@ -1,0 +1,136 @@
+/* ------------------------------ */
+/* CSS Réservation - Accessible, Responsive, Élégant */
+/* ------------------------------ */
+
+
+.reservation-page {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  font-family: 'Poppins', sans-serif;
+}
+
+
+.reservation-page h1 {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.4rem;
+  text-align: center;
+  color: #6d3b51;
+  margin-bottom: 2rem;
+}
+
+
+.confirmation {
+  text-align: center;
+  font-size: 1.2rem;
+  padding: 2rem;
+  color: #2ecc71;
+  background-color: #f0fdf4;
+  border-radius: 8px;
+  font-weight: 500;
+}
+
+
+/* 📝 Formulaire */
+.reservation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+
+.reservation-form label {
+  font-weight: 600;
+  color: #4a2c3f;
+  font-size: 1rem;
+}
+
+
+.reservation-form input,
+.reservation-form select,
+.reservation-form textarea {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fdf6f6;
+  transition: border-color 0.3s ease;
+}
+
+
+.reservation-form input:focus,
+.reservation-form select:focus,
+.reservation-form textarea:focus {
+  border-color: #b04572;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(176, 69, 114, 0.2);
+}
+
+
+/* 🌟 Bouton */
+.reservation-form button {
+  padding: 0.8rem 1.2rem;
+  font-size: 1rem;
+  background-color: #6d3b51;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+
+.reservation-form button:hover,
+.reservation-form button:focus {
+  background-color: #5c3247;
+}
+
+
+/* ❗ Messages d'erreur */
+.error {
+  color: #c0392b;
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+
+/* ♿ Focus visible global */
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: 2px solid #6d3b51;
+  outline-offset: 2px;
+}
+
+
+/* 📱 Responsive */
+@media (max-width: 600px) {
+  .reservation-page {
+	padding: 1.5rem;
+  }
+
+
+  .reservation-form {
+	gap: 0.75rem;
+  }
+
+
+  .reservation-form input,
+  .reservation-form select,
+  .reservation-form textarea {
+	font-size: 0.95rem;
+  }
+
+
+  .reservation-form button {
+	font-size: 0.95rem;
+	padding: 0.75rem 1rem;
+  }
+}
+

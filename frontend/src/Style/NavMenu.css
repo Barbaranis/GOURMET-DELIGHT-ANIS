@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Merriweather:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;600&display=swap');
+
+
+/* ----------------------- BASE ----------------------- */
+body {
+  font-family: 'Great Vibes', cursive;
+  margin: 0;
+  padding: 0;
+  background: #fffafc;
+  color: #44093be0;
+}
+a { text-decoration: none; color: inherit; }
+
+
+/* -------------------- NAV DESKTOP -------------------- */
+.nav-desktop{
+  display:flex;
+  align-items:center;                 /* ✅ aligne le bouton avec les liens */
+  justify-content:center;
+  gap:40px;
+  font-weight:600;
+  font-family:'Merriweather',serif;
+  letter-spacing:.04em;
+  margin-top:20px;
+  z-index:100;
+}
+
+
+/* liens desktop */
+.nav-desktop a{
+  color:#44093be0;
+  font-size:.95rem;
+  position:relative;
+  padding:5px 0;
+  transition:color .35s ease;
+}
+.nav-desktop a::after{
+  content:"";
+  position:absolute;
+  width:0;height:3px;
+  background:#a1446c;
+  left:0;bottom:-6px;border-radius:3px;
+  transition:width .35s ease;
+}
+.nav-desktop a:hover,
+.nav-desktop a:focus{ color:#7a2f58; outline:none; }
+.nav-desktop a:hover::after,
+.nav-desktop a:focus::after{ width:100%; }
+
+
+/* bouton Déconnexion stylé comme un lien */
+.logout-link{
+  background:none;border:0;cursor:pointer;padding:5px 0;
+  color:#44093be0;font:inherit;letter-spacing:.04em;
+  position:relative;                   /* ✅ underline animée aussi */
+}
+.logout-link::after{
+  content:""; position:absolute; left:0; bottom:-6px;
+  width:0; height:3px; background:#a1446c; border-radius:3px;
+  transition:width .35s ease;
+}
+.logout-link:hover,
+.logout-link:focus{ color:#7a2f58; outline:none; }
+.logout-link:hover::after,
+.logout-link:focus::after{ width:100%; }
+
+
+/* -------------------- BOUTON BURGER (MOBILE) -------------------- */
+.menu-toggle{
+  display:none; /* hidden desktop */
+  flex-direction:column; justify-content:space-between; align-items:center;
+  width:40px;height:30px;background-color:#c78199c8;border-radius:6px;
+  cursor:pointer; position:fixed; top:25px; right:25px; z-index:1100;
+  box-shadow:0 2px 12px rgba(0,0,0,.1); transition:background .3s ease;
+}
+.menu-toggle:hover,.menu-toggle:focus{ background-color:#5e3247; outline:none; }
+.menu-toggle span{ display:block; width:22px; height:3px; background:#a1446c;
+  margin:4px 0; border-radius:2px; transition:all .3s ease; }
+.menu-toggle.active span:nth-child(1){ transform:rotate(45deg); top:7px; position:relative; }
+.menu-toggle.active span:nth-child(2){ opacity:0; }
+.menu-toggle.active span:nth-child(3){ transform:rotate(-45deg); top:-7px; position:relative; }
+
+
+/* -------------------- NAVIGATION MOBILE -------------------- */
+.nav-menu{
+  display:flex; flex-direction:column;
+  position:fixed; top:0; right:0;
+  width:75%; max-width:350px; height:100vh;
+  background:linear-gradient(135deg,#c1aab1,#ffffff);
+  padding:calc(70px + env(safe-area-inset-top,0px)) 30px 24px; /* ✅ espace haut + notch */
+  font-family:'Poppins',sans-serif; font-weight:600;
+  transform:translateX(100%); transition:transform .45s cubic-bezier(.77,0,.175,1);
+  z-index:99999;
+
+
+  /* ✅ défilement fluide et contenu long */
+  overflow-y:auto; -webkit-overflow-scrolling:touch;
+}
+
+
+/* **option**: empêcher le body de scroller quand le menu est ouvert (si tu veux)
+   .nav-menu.show ~ * { overflow:hidden; } */
+
+
+.nav-menu.show{ transform:translateX(0); }
+
+
+/* liens mobile */
+.nav-menu a,
+.nav-menu .logout-link{
+  margin:16px 0;                        /* ✅ même marge pour Compte/Déconnexion */
+  color:#a1446c; font-size:1.75rem; letter-spacing:.02em;
+  transition:all .3s ease; outline-offset:4px; font-family:'Great Vibes',cursive;
+}
+.nav-menu a:hover,
+.nav-menu a:focus,
+.nav-menu .logout-link:hover,
+.nav-menu .logout-link:focus{
+  color:#57213f; transform:translateX(4px); outline:none;
+}
+
+
+/* Bouton fermer */
+.close-btn{
+  position:sticky;                      /* ✅ toujours visible en haut au scroll */
+  top:10px; align-self:flex-end;
+  background:none;border:none;font-size:2.4rem;
+  color:#a1446c7d; cursor:pointer; transition:color .3s ease; z-index:1;
+}
+.close-btn:hover,.close-btn:focus{ color:#44093be0; outline:none; }
+
+
+/* ------------------- RESPONSIVE ------------------- */
+@media (max-width:768px){
+  .nav-desktop{ display:none; }
+  .menu-toggle{ display:flex; }
+  /* Si l’écran est vraiment bas en hauteur, on réduit un peu la taille des items */
+  @media (max-height:650px){
+    .nav-menu a, .nav-menu .logout-link{ font-size:1.4rem; }
+  }
+}
+@media (min-width:769px){
+  .menu-toggle{ display:none !important; }
+  .nav-menu{ display:none !important; transform:translateX(100%) !important; }
+}
+
+
+
+

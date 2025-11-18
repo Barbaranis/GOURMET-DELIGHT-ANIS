@@ -1,0 +1,211 @@
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap');
+
+
+:root {
+  --color-primary: #6d3b51;
+  --color-secondary: #f2e6ec;
+  --color-hover: #f8d1e3;
+  --color-deep-pink: #e91e63;
+  --shadow-color: rgba(158, 56, 106, 0.15);
+  --focus-outline: 3px dashed #6d3b51;
+  --focus-offset: 4px;
+}
+
+
+
+
+/* --------- CONTAINER --------- */
+.dashboard-admin {
+  padding: 50px 20px 80px;
+  background: linear-gradient(to bottom, #fff9fb, #f8ecf1);
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+}
+
+
+
+
+/* --------- TITLE --------- */
+.dashboard-title {
+  text-align: center;
+  font-size: 2.8rem;
+  color: var(--color-primary);
+  margin-bottom: 60px;
+  position: relative;
+  font-family: 'Great Vibes', cursive;
+}
+
+
+
+
+.dashboard-title::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 4px;
+  background-color: var(--color-deep-pink);
+  margin: 15px auto 0;
+  border-radius: 2px;
+}
+
+
+
+
+/* --------- GRID --------- */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 30px;
+  padding: 0 8%;
+}
+
+
+
+
+/* --------- BUTTON --------- */
+.dashboard-grid button {
+  background: linear-gradient(135deg, var(--color-secondary), #fce8f2);
+  border: none;
+  padding: 20px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  border-radius: 18px;
+  box-shadow: 0 8px 18px var(--shadow-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  position: relative;
+  line-height: 1.6;
+  width: 100%;
+}
+
+
+
+
+/* Hover & Focus accessibles */
+.dashboard-grid button:hover,
+.dashboard-grid button:focus {
+  background: linear-gradient(135deg, var(--color-hover), #ffd6eb);
+  transform: translateY(-6px);
+  box-shadow: 0 10px 20px rgba(158, 56, 106, 0.25);
+  outline: var(--focus-outline);
+  outline-offset: var(--focus-offset);
+}
+
+
+
+
+/* --------- BADGE --------- */
+.badge-avis {
+  background-color: var(--color-deep-pink);
+  color: white;
+  border-radius: 50%;
+  padding: 0.35em 0.65em;
+  font-size: 0.8em;
+  font-weight: bold;
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+
+
+
+/* --------- CHEF CARD --------- */
+.dashboard-chef-card {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #fff9f5;
+  border-left: 6px solid #e25822;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  flex-wrap: wrap;
+}
+
+
+
+
+.chef-card-summary {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+
+
+
+.chef-card-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #e25822;
+}
+
+
+
+
+.chef-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1;
+}
+
+
+
+
+.chef-name {
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+
+
+
+/* --------- RESPONSIVE --------- */
+@media (max-width: 768px) {
+  .dashboard-title {
+    font-size: 2.3rem;
+  }
+
+
+  .dashboard-grid {
+    padding: 0 5%;
+    gap: 20px;
+  }
+
+
+  .dashboard-grid button {
+    font-size: 1rem;
+    padding: 18px;
+  }
+}
+
+
+
+
+@media (max-width: 480px) {
+  .dashboard-title {
+    font-size: 2rem;
+  }
+
+
+  .dashboard-grid {
+    padding: 0 15px;
+    grid-template-columns: 1fr;
+  }
+
+
+  .dashboard-grid button {
+    font-size: 0.95rem;
+    padding: 16px;
+  }
+}
+

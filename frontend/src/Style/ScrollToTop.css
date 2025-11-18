@@ -1,0 +1,41 @@
+.scroll-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background-color: #a41661;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  
+  .scroll-to-top:hover,
+  .scroll-to-top:focus {
+    background-color: #870d4e;
+    transform: scale(1.05);
+    outline: none;
+  }
+  
+  
+  .scroll-to-top:focus-visible {
+    outline: 2px dashed #fff;
+    outline-offset: 3px;
+  }
+  
+  
+  @media (max-width: 600px) {
+    .scroll-to-top {
+      bottom: 1.2rem;
+      right: 1.2rem;
+      font-size: 1rem;
+      padding: 0.5rem 1rem;
+    }
+  }
+  
+  
