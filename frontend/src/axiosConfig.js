@@ -1,13 +1,19 @@
 // ✅ src/axiosConfig.js
 import axios from 'axios';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const API_URL =
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === 'production'
+    ? 'https://gourmet-delight-anis.onrender.com/api'
+    : 'http://localhost:5000/api');
 
 const api = axios.create({
   baseURL: API_URL,
-  withCredentials: true,   // cookies (JWT httpOnly / CSRF)
-  timeout: 20000, // 20 sec
+  withCredentials: true, // cookies (JWT httpOnly / CSRF)
+  timeout: 20000,
 });
+
+
 
 api.interceptors.request.use(
   (config) => {
