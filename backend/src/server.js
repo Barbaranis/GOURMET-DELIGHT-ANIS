@@ -1,206 +1,164 @@
-require('dotenv').config();
+// =====================
+// SERVER.JS — VERSION FINALE
+// =====================
 
-const express = require('express');
-const helmet = require('helmet');
-const cors = require('cors');
-const rateLimit = require('express-rate-limit');
-const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
-const csrf = require('csurf');
-const path = require('path');
+require("dotenv").config();
 
-const sequelize = require('./config/db');
+const express = require("express");
+const helmet = require("helmet");
+const cors = require("cors");
+const rateLimit = require("express-rate-limit");
+const morgan = require("morgan");
+const cookieParser = require("cookie-parser");
+const csrf = require("csurf");
+const path = require("path");
 
-// --- Routes
-const categorieRoutes = require('./routes/categorie.routes');
-const authRoutes = require('./routes/auth.routes');
-const platRoutes = require('./routes/plat.routes');
-const utilisateurRoutes = require('./routes/utilisateur.routes');
-const contactRoutes = require('./routes/contact');
+const sequelize = require("./config/db");
+
+// Routes
+const categorieRoutes = require("./routes/categorie.routes");
+const authRoutes = require("./routes/auth.routes");
+const platRoutes = require("./routes/plat.routes");
+const utilisateurRoutes = require("./routes/utilisateur.routes");
+const contactRoutes = require("./routes/contact");
 
 const app = express();
-const isProd = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === "production";
 
-console.log(`🌍 ENV : connecté à la base ${process.env.DB_NAME} en tant que ${process.env.DB_USER}`);
+console.log("🌍 Backend démarré — ENV:", process.env.NODE_ENV);
 
-// ------------------------------
-// Helmet (CSP assouplie pour Netlify + ReCAPTCHA)
-// ------------------------------
-app.use(
-  helmet({
-    crossOriginResourcePolicy: { policy: 'cross-origin' },
-    crossOriginEmbedderPolicy: false,
-    contentSecurityPolicy: isProd
-      ? undefined
-      : {
-          useDefaults: true,
-          directives: {
-            "script-src": [
-              "'self'",
-              "'unsafe-inline'",
-              "https://www.google.com",
-              "https://www.gstatic.com",
-              "https://www.recaptcha.net"
-            ],
-            "frame-src": [
-              "'self'",
-              "https://www.google.com",
-              "https://www.recaptcha.net"
-            ],
-            "connect-src": [
-              "'self'",
-              "http://localhost:5000",
-              "http://localhost:3000",
-              "https://www.google.com",
-              "https://www.gstatic.com"
-            ],
-            "img-src": ["'self'", "data:", "blob:", "https://www.gstatic.com"],
-          }
-        }
-  })
-);
+// -------------------------
+//  CORS — VERSION FIXÉE
+// -------------------------
 
-// Logs + anti-bourrinage
-app.use(morgan('dev'));
-app.use(
-  rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    message: '⚠️ Trop de requêtes, réessayez plus tard.',
-  })
-);
-
-// Parsers
-app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// ------------------------------
-// CORS GLOBAL CORRECT
-// ------------------------------
 const allowedOrigins = [
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'https://gourmet-delight.netlify.app',
-  'https://gourmetdelight.netlify.app'
+  "https://gourmetdelight.netlify.app",
+  "https://gourmet-delight.netlify.app",
+  "http://localhost:3000",
+  "http://localhost:3001"
 ];
 
 app.use(
   cors({
-    origin: (origin, cb) => {
-      if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-      return cb(new Error(`Origin "${origin}" non autorisé`));
+    origin: function (origin, cb) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return cb(null, true);
+      }
+      console.log("❌ Origin CORS refusée :", origin);
+      return cb(new Error("Origin non autorisée par CORS"));
     },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: [
-      'Content-Type',
-      'Authorization',
-      'X-CSRF-Token',
-      'x-csrf-token',
-      'x-xsrf-token',
-      'Accept'
-    ],
+      "Content-Type",
+      "Authorization",
+      "X-CSRF-Token",
+      "csrf-token",
+      "x-csrf-token",
+      "x-xsrf-token",
+      "Accept"
+    ]
   })
 );
 
-// OPTIONS préflight
-app.options('*', cors());
+// Préflight
+app.options("*", cors());
 
-// Anti-cache API
-app.use((req, res, next) => {
-  if (req.path.startsWith('/api/')) {
-    res.set({ 'Cache-Control': 'no-store', Pragma: 'no-cache', Expires: '0' });
-  }
-  next();
-});
+// -------------------------
+// SECURITÉ
+// -------------------------
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+    crossOriginEmbedderPolicy: false
+  })
+);
 
-// ------------------------------
-// CSRF (clé du problème 403 !)
-// ------------------------------
+app.use(morgan("dev"));
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// -------------------------
+// CSRF
+// -------------------------
 const csrfProtection = csrf({
   cookie: {
     httpOnly: true,
-    secure: isProd,      // HTTPS obligatoire en prod → OK pour Render
-    sameSite: 'None',    // 🔥 autorise Cookie cross-site → indispensable avec Netlify
+    secure: isProd,
+    sameSite: "Lax"
   },
   value: (req) =>
-    req.get('X-CSRF-Token') ||
-    req.get('x-csrf-token') ||
-    req.get('x-xsrf-token'),
+    req.get("X-CSRF-Token") ||
+    req.get("x-csrf-token") ||
+    req.get("x-xsrf-token")
 });
 
-// Route publique pour récupérer le CSRF token
-app.get('/api/csrf-token', csrfProtection, (req, res) => {
+// route publique pour récupérer le token
+app.get("/api/csrf-token", csrfProtection, (req, res) => {
   const token = req.csrfToken();
-
-  // Cookie lisible pour debug
-  res.cookie('XSRF-TOKEN', token, {
+  res.cookie("XSRF-TOKEN", token, {
     httpOnly: false,
-    secure: isProd,
-    sameSite: 'None',  // 🔥 aussi obligatoire
+    sameSite: "Lax",
+    secure: isProd
   });
-
   res.json({ csrfToken: token });
 });
 
-// Appliquer CSRF UNIQUEMENT sur POST / PUT / PATCH / DELETE
-const requireCsrfForUnsafeMethods = (req, res, next) => {
-  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();
+// appliquer CSRF uniquement aux méthodes sensibles
+const secureMethods = (req, res, next) => {
+  if (["GET", "HEAD", "OPTIONS"].includes(req.method)) return next();
   return csrfProtection(req, res, next);
 };
 
-// ------------------------------
-// Static (images)
-// ------------------------------
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// -------------------------
+// STATIC — UPLOADS
+// -------------------------
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
-// ------------------------------
-// API Routes
-// ------------------------------
-app.use('/api/categories', categorieRoutes);
+// -------------------------
+// ROUTES API
+// -------------------------
+app.use("/api/categories", categorieRoutes);
+app.use("/api/auth", secureMethods, authRoutes);
+app.use("/api/plats", secureMethods, platRoutes);
+app.use("/api/utilisateurs", secureMethods, utilisateurRoutes);
+app.use("/api/contact", secureMethods, contactRoutes);
 
-app.use('/api/auth', requireCsrfForUnsafeMethods, authRoutes);
-app.use('/api/plats', requireCsrfForUnsafeMethods, platRoutes);
-app.use('/api/utilisateurs', requireCsrfForUnsafeMethods, utilisateurRoutes);
-app.use('/api/contact', requireCsrfForUnsafeMethods, contactRoutes);
-
-// ------------------------------
-// Error Handling (CSRF + global)
-// ------------------------------
-app.use((err, _req, res, next) => {
-  if (err.code === 'EBADCSRFTOKEN') {
-    return res.status(403).json({ error: 'Invalid or missing CSRF token' });
-  }
-  if (err.message && /non autorisé/i.test(err.message)) {
-    return res.status(403).json({ error: err.message });
+// -------------------------
+// ERRORS
+// -------------------------
+app.use((err, req, res, next) => {
+  if (err.code === "EBADCSRFTOKEN") {
+    return res.status(403).json({ error: "Invalid or missing CSRF token" });
   }
   next(err);
 });
 
-app.use((err, _req, res, _next) => {
-  console.error('❌ Erreur serveur:', err);
-  res.status(500).json({ error: 'Erreur serveur' });
+app.use((err, req, res, next) => {
+  console.error("❌ Erreur serveur :", err);
+  res.status(500).json({ error: "Erreur serveur" });
 });
 
-// ------------------------------
-// Health
-// ------------------------------
-app.get('/api/health', (_req, res) => res.json({ ok: true }));
-app.get('/', (_req, res) => res.send('✅ Serveur backend actif 🍽️'));
+// -------------------------
+// HEALTH
+// -------------------------
+app.get("/api/health", (_, res) => res.json({ ok: true }));
 
-// ------------------------------
-// Lancement serveur
-// ------------------------------
+// -------------------------
+// START
+// -------------------------
 const PORT = process.env.PORT || 5000;
+
 app.listen(PORT, async () => {
-  console.log(`🚀 Serveur backend lancé sur http://localhost:${PORT}`);
+  console.log(`🚀 API en ligne sur port ${PORT}`);
+
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    console.log('✅ Modèles Sequelize synchronisés.');
-  } catch (err) {
-    console.error('❌ Erreur Sequelize :', err);
+    console.log("✔️ DB OK — modèles synchronisés");
+  } catch (e) {
+    console.error("❌ Erreur DB :", e);
   }
 });
 
