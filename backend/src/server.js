@@ -31,9 +31,10 @@ const isProd = process.env.NODE_ENV === 'production';
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
-  'https://gourmetdeligh.netlify.app',
-  'https://gourmetdeligh.netlify.app'
-];
+  'https://gourmetdeligh.netlify.app', // <-- LE VRAI DOMAINE NETLIFY
+].concat(process.env.CORS_ORIGIN ? [process.env.CORS_ORIGIN] : []);
+
+
 
 app.use(
   cors({
