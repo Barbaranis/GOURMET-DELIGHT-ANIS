@@ -5,16 +5,33 @@ import '../Style/Login.css';
 import { auth, signInWithEmailAndPassword } from '../firebaseClient';
 import { useAuth } from '../context/AuthContext';
 
-// 🔗 Base URL de l'API
-// - en prod : Render (avec /api)
-// - en dev : localhost:5000/api
-const API =
-  process.env.REACT_APP_API_URL ||
-  (process.env.NODE_ENV === 'production'
-    ? 'https://gourmet-delight-anis.onrender.com/api'
-    : 'http://localhost:5000/api');
 
+// 🔧 Normalisation de l’URL API (enlève les / de fin et un éventuel /api)
+const normalizeApi = (url) => {
+  const fallback = 'http://localhost:5000';
+  if (!url) return fallback;
+
+
+  let clean = url.trim();
+
+
+  // enlève les / à la fin
+  clean = clean.replace(/\/+$/, '');
+
+
+  // si ça se termine par /api ou /api/ → on enlève /api
+  if (clean.toLowerCase().endsWith('/api')) {
+    clean = clean.slice(0, -4);
+  }
+
+
+  return clean || fallback;
+};
+
+
+const API = normalizeApi(process.env.REACT_APP_API_URL);
 const SHOW_RECAPTCHA = process.env.NODE_ENV !== 'test';
+
 
 // util timeout
 const fetchWithTimeout = async (url, options = {}, ms = 10000) => {
@@ -27,15 +44,18 @@ const fetchWithTimeout = async (url, options = {}, ms = 10000) => {
   }
 };
 
+
 const Login = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
+
   const navigate = useNavigate();
   const location = useLocation();
   const { refreshMe } = useAuth();
+
 
   // IDs stables & accessibles
   const emailId = useId();
@@ -43,29 +63,35 @@ const Login = () => {
   const emailErrId = `${emailId}-err`;
   const pwdErrId = `${pwdId}-err`;
 
+
   // Gestion du focus
   const errorSummaryRef = useRef(null);
   const emailRef = useRef(null);
   const pwdRef = useRef(null);
+
 
   // reCAPTCHA
   const recaptchaRef = useRef(null);
   const widgetIdRef = useRef(null);
   const renderedRef = useRef(false);
 
+
   // Titre de page explicite
   useEffect(() => {
     document.title = 'Connexion — Gourmet Delight';
   }, []);
 
+
   /* -------- reCAPTCHA : charger le script + rendre le widget (sans doublon) -------- */
   useEffect(() => {
     if (!SHOW_RECAPTCHA) return;
+
 
     const renderWidget = () => {
       if (renderedRef.current) return;
       if (!window.grecaptcha || typeof window.grecaptcha.render !== 'function') return;
       if (!recaptchaRef.current) return;
+
 
       widgetIdRef.current = window.grecaptcha.render(recaptchaRef.current, {
         sitekey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // clé TEST v2
@@ -76,10 +102,12 @@ const Login = () => {
       renderedRef.current = true;
     };
 
+
     if (window.grecaptcha && typeof window.grecaptcha.render === 'function') {
       renderWidget();
       return;
     }
+
 
     if (!document.querySelector('#recaptcha-script')) {
       const s = document.createElement('script');
@@ -91,6 +119,7 @@ const Login = () => {
       document.body.appendChild(s);
     }
 
+
     const t = setInterval(() => {
       if (window.grecaptcha && typeof window.grecaptcha.render === 'function') {
         clearInterval(t);
@@ -98,19 +127,31 @@ const Login = () => {
       }
     }, 200);
 
+
     return () => clearInterval(t);
   }, []);
+
 
   // validation
   const validate = () => {
     const errs = {};
-    if (!form.email.trim()) errs.email = 'L’email est requis.';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+    if (!form.email.trim()) {
+      errs.email = 'L’email est requis.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
       errs.email = "Format d’email invalide.";
-    if (!form.password?.trim()) errs.password = 'Le mot de passe est requis.';
-    else if (form.password.length < 12) errs.password = 'Minimum 12 caractères.';
+    }
+
+
+    if (!form.password?.trim()) {
+      errs.password = 'Le mot de passe est requis.';
+    } else if (form.password.length < 12) {
+      errs.password = 'Minimum 12 caractères.';
+    }
+
+
     return errs;
   };
+
 
   // focus sur premier champ en erreur
   const focusFirstError = (errs) => {
@@ -120,9 +161,9 @@ const Login = () => {
     }
     if (errs.password && pwdRef.current) {
       pwdRef.current.focus();
-      return;
     }
   };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -131,26 +172,33 @@ const Login = () => {
     setApiError('');
   };
 
+
   const firebaseLogin = async () => {
     try {
       await signInWithEmailAndPassword(auth, form.email, form.password);
     } catch {
-      // on ignore les erreurs Firebase (optionnel)
+      // on ignore les erreurs Firebase ici
     }
   };
 
-  // 🔐 Récupération du token CSRF (via /api/csrf-token côté back)
+
   const getCsrfToken = async () => {
-    const res = await fetchWithTimeout(`${API}/csrf-token`, { credentials: 'include' }, 8000);
+    const res = await fetchWithTimeout(`${API}/api/csrf-token`, {
+      credentials: 'include',
+    }, 8000);
+
+
     if (!res.ok) throw new Error(`CSRF ${res.status}`);
     const data = await res.json();
     if (!data?.csrfToken) throw new Error('No CSRF token returned');
     return data.csrfToken;
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setApiError('');
+
 
     const errs = validate();
     if (Object.keys(errs).length) {
@@ -162,6 +210,7 @@ const Login = () => {
       });
       return;
     }
+
 
     // reCAPTCHA
     let recaptchaToken = 'dev';
@@ -178,28 +227,27 @@ const Login = () => {
       }
     }
 
+
     try {
       setSubmitting(true);
       const csrfToken = await getCsrfToken();
 
-      const res = await fetchWithTimeout(
-        `${API}/auth/login`,
-        {
-          method: 'POST',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-Token': csrfToken,
-          },
-          body: JSON.stringify({
-            email: form.email,
-            password: form.password,
-            mot_de_passe: form.password, // compat
-            recaptchaToken,
-          }),
+
+      const res = await fetchWithTimeout(`${API}/api/auth/login`, {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
         },
-        12000
-      );
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+          mot_de_passe: form.password, // compat
+          recaptchaToken,
+        }),
+      }, 12000);
+
 
       const text = await res.text();
       let data;
@@ -209,27 +257,42 @@ const Login = () => {
         data = { message: text };
       }
 
+
       if (!res.ok) {
         setApiError(data?.message || `Erreur ${res.status} au login`);
         return;
       }
 
+
       await refreshMe().catch(() => {});
       firebaseLogin().catch(() => {});
+
+
       if (data?.user) {
         localStorage.setItem('role', data.user.role || '');
         localStorage.setItem('prenom', data.user.prenom || '');
       }
+      // on indique qu’on utilise le cookie httpOnly
       localStorage.setItem('token', 'cookie');
+
 
       const from = location.state?.from?.pathname;
       const target =
         from || (data?.user?.role === 'admin' ? '/admin/dashboard' : '/employe/dashboard');
+
+
       try {
         navigate(target, { replace: true });
-      } catch {}
+      } catch {
+        // fallback hard reload
+        window.location.assign(target);
+      }
+
+
       setTimeout(() => {
-        if (window.location.pathname !== target) window.location.assign(target);
+        if (window.location.pathname !== target) {
+          window.location.assign(target);
+        }
       }, 60);
     } catch (error) {
       setApiError(
@@ -245,7 +308,9 @@ const Login = () => {
     }
   };
 
+
   const hasErrors = Boolean(errors.email || errors.password);
+
 
   return (
     <main className="login-container" aria-label="Page de connexion">
@@ -266,6 +331,7 @@ const Login = () => {
         )}
       </div>
 
+
       <form
         id="login-form"
         className="login-form"
@@ -276,12 +342,14 @@ const Login = () => {
       >
         <h1>Connexion</h1>
 
+
         {/* Erreur API (annoncée aux lecteurs d’écran) */}
         {apiError && (
           <p id="api-error" className="error" role="alert" aria-live="assertive">
             {apiError}
           </p>
         )}
+
 
         <label htmlFor={emailId}>Email</label>
         <input
@@ -306,6 +374,7 @@ const Login = () => {
           </span>
         )}
 
+
         <label htmlFor={pwdId}>Mot de passe</label>
         <input
           ref={pwdRef}
@@ -326,6 +395,7 @@ const Login = () => {
           </span>
         )}
 
+
         {/* reCAPTCHA v2 */}
         {SHOW_RECAPTCHA && (
           <div
@@ -337,6 +407,7 @@ const Login = () => {
           />
         )}
 
+
         <button
           type="submit"
           disabled={submitting}
@@ -345,16 +416,19 @@ const Login = () => {
           {submitting ? 'Connexion…' : 'Se connecter'}
         </button>
 
+
         <p
           id="submit-status"
           role="status"
           aria-live="polite"
           className="visually-hidden"
-        ></p>
+        />
       </form>
     </main>
   );
 };
 
+
 export default Login;
+
 
