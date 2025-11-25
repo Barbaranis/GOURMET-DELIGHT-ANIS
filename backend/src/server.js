@@ -31,7 +31,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
-  'https://gourmetdelight.netlify.app',
+  'https://gourmetdeligh.netlify.app',
   'https://gourmet-delight.netlify.app'
 ];
 
