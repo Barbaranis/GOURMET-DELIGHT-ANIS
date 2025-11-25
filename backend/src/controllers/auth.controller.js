@@ -1,4 +1,4 @@
-//  src/controllers/auth.controller.js
+// src/controllers/auth.controller.js
 
 
 const jwt = require('jsonwebtoken');
@@ -10,6 +10,8 @@ const Utilisateur = db.Utilisateur;
 // 🔧 Config JWT
 const TOKEN_DURATION = '24h';
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
+
+
 
 
 // -----------------------------------------------------
@@ -92,6 +94,84 @@ exports.login = async (req, res) => {
   } catch (error) {
     console.error('❌ Erreur login :', error);
     res.status(500).json({ message: 'Erreur serveur.' });
+  }
+};
+
+
+
+
+// -----------------------------------------------------
+// 🧾 Inscription utilisateur (POST /api/auth/register)
+// -----------------------------------------------------
+exports.register = async (req, res) => {
+  try {
+    // 1) Récup et normalisation
+    const email = (req.body.email || '').trim().toLowerCase();
+    const mot_de_passe = req.body.mot_de_passe ?? req.body.password;
+    const prenom = (req.body.prenom || '').trim();
+    let role = req.body.role;
+
+
+    // 2) Validation minimale
+    if (!email || !mot_de_passe || !prenom) {
+      return res.status(400).json({ error: 'email, mot_de_passe et prenom sont obligatoires.' });
+    }
+
+
+    // 3) Rôle par défaut / sécurité (au cas où)
+    const ROLES_AUTORISES = [
+      'admin',
+      'chef_cuisine',
+      'maitre_hotel',
+      'responsable_salle',
+      'gestionnaire_contenu',
+      'employe',
+    ];
+    if (!role || !ROLES_AUTORISES.includes(role)) {
+      role = 'employe';
+    }
+
+
+    // 4) Vérifier si l'utilisateur existe déjà (case-insensitive)
+    const deja = await Utilisateur.findOne({
+      where: db.Sequelize.where(
+        db.Sequelize.fn('LOWER', db.Sequelize.col('email')),
+        email
+      ),
+    });
+
+
+    if (deja) {
+      return res.status(409).json({ error: 'Cet email est déjà utilisé.' });
+    }
+
+
+    // 5) Hash du mot de passe
+    const hash = await bcrypt.hash(String(mot_de_passe), 10);
+
+
+    // 6) Création dans PostgreSQL
+    const user = await Utilisateur.create({
+      email,
+      mot_de_passe: hash,
+      prenom,
+      role,
+    });
+
+
+    // 7) Réponse
+    return res.status(201).json({
+      message: 'Utilisateur créé avec succès.',
+      user: {
+        id: user.id_utilisateur ?? user.id,
+        email: user.email,
+        prenom: user.prenom,
+        role: user.role,
+      },
+    });
+  } catch (err) {
+    console.error('❌ Erreur register :', err);
+    return res.status(500).json({ error: 'Erreur serveur lors de l’inscription.' });
   }
 };
 
