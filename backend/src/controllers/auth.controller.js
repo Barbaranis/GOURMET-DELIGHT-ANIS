@@ -1,41 +1,39 @@
-// src/controllers/auth.controller.js
-
+// 📁 src/controllers/auth.controller.js
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const db = require('../models');
-const Utilisateur = db.Utilisateur;
 
+const Utilisateur = db.Utilisateur;
 
 // 🔧 Config JWT
 const TOKEN_DURATION = '24h';
 const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret';
 
-
-
-
 // -----------------------------------------------------
-// 🔐 Connexion utilisateur (POST /api/auth/login)
+// 🔐 Connexion utilisateur  (POST /api/auth/login)
 // -----------------------------------------------------
 exports.login = async (req, res) => {
   try {
-    // ✅ 1) Normalisation des champs
+    // 1) Normalisation des champs
     const email = (req.body.email || '').trim().toLowerCase();
-    const password =
-      req.body.password ?? req.body.mot_de_passe; // <-- accepte les 2 clés
+    const password = req.body.password ?? req.body.mot_de_passe;
+    const recaptchaToken = req.body.recaptchaToken; // reçu depuis le front (optionnel)
 
-
-    // 🧪 debug minimal (retire-le quand tout est OK)
     console.log('LOGIN DEBUG -> email:', email, '| hasPwd:', Boolean(password));
-
 
     // 2) Validation d'entrée
     if (!email || !password) {
       return res.status(400).json({ message: 'Email et mot de passe requis.' });
     }
 
+    // 3) (Optionnel) tu pourrais vérifier recaptchaToken ici côté serveur
+    // Pour l’instant on ne bloque pas dessus
+    if (!recaptchaToken) {
+      console.log('LOGIN INFO -> aucun recaptchaToken reçu (dev mode)');
+    }
 
-    // 3) Recherche utilisateur (case-insensitive)
+    // 4) Recherche de l'utilisateur (case-insensitive)
     const user = await Utilisateur.findOne({
       where: db.Sequelize.where(
         db.Sequelize.fn('LOWER', db.Sequelize.col('email')),
@@ -43,52 +41,53 @@ exports.login = async (req, res) => {
       ),
     });
 
-
     if (!user) {
       return res.status(401).json({ message: 'Utilisateur non trouvé.' });
     }
 
-
-    // 4) Récup du hash (selon le nom de ta colonne)
+    // 5) Récupération du hash (selon le nom de ta colonne)
     const hash = user.mot_de_passe ?? user.password;
     if (!hash) {
-      // Cas rare: colonne vide/mauvais nom
-      return res.status(500).json({ message: 'Mot de passe indisponible côté serveur.' });
+      return res
+        .status(500)
+        .json({ message: 'Mot de passe indisponible côté serveur.' });
     }
 
-
-    // 5) Comparaison bcrypt
+    // 6) Comparaison bcrypt
     const ok = await bcrypt.compare(password, hash);
-    console.log('LOGIN DEBUG -> bcrypt.compare =', ok); // debug léger
+    console.log('LOGIN DEBUG -> bcrypt.compare =', ok);
     if (!ok) {
       return res.status(401).json({ message: 'Mot de passe incorrect.' });
     }
 
+    // 7) Génération du JWT
+    const payload = {
+      id: user.id_utilisateur ?? user.id,
+      role: user.role,
+      email: user.email,
+      prenom: user.prenom,
+    };
 
-    // 6) Génération token
-    const token = jwt.sign(
-      { id: user.id_utilisateur ?? user.id, role: user.role },
-      JWT_SECRET,
-      { expiresIn: TOKEN_DURATION }
-    );
+    const token = jwt.sign(payload, JWT_SECRET, {
+      expiresIn: TOKEN_DURATION,
+    });
 
-
-    // 7) Cookie httpOnly
+    // 8) Envoi du token en cookie httpOnly
     res
       .cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'Lax',
-        maxAge: 24 * 60 * 60 * 1000,
+        maxAge: 24 * 60 * 60 * 1000, // 24h
       })
       .status(200)
       .json({
         message: 'Connexion réussie.',
         user: {
-          id: user.id_utilisateur ?? user.id,
-          email: user.email,
-          role: user.role,
-          prenom: user.prenom,
+          id: payload.id,
+          email: payload.email,
+          role: payload.role,
+          prenom: payload.prenom,
         },
       });
   } catch (error) {
@@ -97,28 +96,26 @@ exports.login = async (req, res) => {
   }
 };
 
-
-
-
 // -----------------------------------------------------
 // 🧾 Inscription utilisateur (POST /api/auth/register)
+// (peut servir à créer le premier admin ou des comptes publics)
 // -----------------------------------------------------
 exports.register = async (req, res) => {
   try {
-    // 1) Récup et normalisation
+    // 1) Récupération et normalisation
     const email = (req.body.email || '').trim().toLowerCase();
     const mot_de_passe = req.body.mot_de_passe ?? req.body.password;
     const prenom = (req.body.prenom || '').trim();
     let role = req.body.role;
 
-
     // 2) Validation minimale
     if (!email || !mot_de_passe || !prenom) {
-      return res.status(400).json({ error: 'email, mot_de_passe et prenom sont obligatoires.' });
+      return res.status(400).json({
+        error: 'email, mot_de_passe et prenom sont obligatoires.',
+      });
     }
 
-
-    // 3) Rôle par défaut / sécurité (au cas où)
+    // 3) Rôles autorisés
     const ROLES_AUTORISES = [
       'admin',
       'chef_cuisine',
@@ -127,12 +124,12 @@ exports.register = async (req, res) => {
       'gestionnaire_contenu',
       'employe',
     ];
+
     if (!role || !ROLES_AUTORISES.includes(role)) {
       role = 'employe';
     }
 
-
-    // 4) Vérifier si l'utilisateur existe déjà (case-insensitive)
+    // 4) Vérifier si l'email existe déjà (case-insensitive)
     const deja = await Utilisateur.findOne({
       where: db.Sequelize.where(
         db.Sequelize.fn('LOWER', db.Sequelize.col('email')),
@@ -140,24 +137,20 @@ exports.register = async (req, res) => {
       ),
     });
 
-
     if (deja) {
       return res.status(409).json({ error: 'Cet email est déjà utilisé.' });
     }
 
-
     // 5) Hash du mot de passe
     const hash = await bcrypt.hash(String(mot_de_passe), 10);
 
-
-    // 6) Création dans PostgreSQL
+    // 6) Création en base
     const user = await Utilisateur.create({
       email,
       mot_de_passe: hash,
       prenom,
       role,
     });
-
 
     // 7) Réponse
     return res.status(201).json({
@@ -171,7 +164,9 @@ exports.register = async (req, res) => {
     });
   } catch (err) {
     console.error('❌ Erreur register :', err);
-    return res.status(500).json({ error: 'Erreur serveur lors de l’inscription.' });
+    return res
+      .status(500)
+      .json({ error: "Erreur serveur lors de l’inscription." });
   }
 };
 
