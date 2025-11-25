@@ -1,17 +1,18 @@
-// ===============================
-// server.js — VERSION CORRIGÉE
-// ===============================
+// =========================
+// SERVER.JS — VERSION FIX CORS + CSRF
+// =========================
 
 require('dotenv').config();
 
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
-const rateLimit = require('express-rate-limit');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const csrf = require('csurf');
+const rateLimit = require('express-rate-limit');
 const path = require('path');
+
 const sequelize = require('./config/db');
 
 // Routes
@@ -24,156 +25,119 @@ const contactRoutes = require('./routes/contact');
 const app = express();
 const isProd = process.env.NODE_ENV === 'production';
 
-console.log("🌍 BACKEND démarré :", process.env.NODE_ENV);
-
-// ===============================
-// CORS — VERSION FIXÉE
-// ===============================
-
+// ------------------------------
+// CORS — VERSION SIMPLE ET ULTRA FIABLE
+// ------------------------------
 const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:3001",
-  "https://gourmetdelight.netlify.app",
-  "https://gourmet-delight.netlify.app",
-  "https://gourmet-delight-anis.onrender.com"  // ⭐ IMPORTANT ⭐
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://gourmetdelight.netlify.app',
+  'https://gourmet-delight.netlify.app'
 ];
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      console.log("🔎 Origin reçue :", origin);
+    origin: (origin, cb) => {
+      console.log("🌍 Origin reçue :", origin);
 
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
+      if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
 
-      console.log("❌ Origin refusée :", origin);
-      return callback(new Error("CORS: Origin non autorisée : " + origin));
+      return cb(new Error(`❌ Origin "${origin}" non autorisée par CORS`));
     },
     credentials: true,
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "X-CSRF-Token",
-      "Accept",
-      "Origin"
-    ],
+    allowedHeaders: ['Content-Type', 'X-CSRF-Token'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
   })
 );
 
-app.options("*", cors());
-
-// ===============================
-// Helmet (CSP minimal compatible)
-// ===============================
+// ------------------------------
+// Helmet (sans conflit CORS)
+// ------------------------------
 app.use(
   helmet({
-    contentSecurityPolicy: false, // on désactive car sinon ça bloque reCAPTCHA
+    crossOriginResourcePolicy: false,
+    contentSecurityPolicy: false,
   })
 );
 
-// ===============================
-// Middlewares
-// ===============================
-
-app.use(morgan("dev"));
+app.use(morgan('dev'));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Anti-cache API
-app.use((req, res, next) => {
-  if (req.path.startsWith("/api/")) {
-    res.set({
-      "Cache-Control": "no-store",
-      Pragma: "no-cache",
-      Expires: "0",
-    });
-  }
-  next();
-});
-
-// ===============================
-// CSRF (avec cookie)
-// ===============================
-
+// ------------------------------
+// CSRF
+// ------------------------------
 const csrfProtection = csrf({
   cookie: {
     httpOnly: true,
     secure: isProd,
-    sameSite: "Lax",
+    sameSite: 'None'
   },
-  value: (req) =>
-    req.get("X-CSRF-Token") ||
-    req.get("x-csrf-token") ||
-    req.get("csrf-token"),
+  value: req =>
+    req.get('X-CSRF-Token') ||
+    req.get('x-csrf-token') ||
+    req.body?._csrf
 });
 
-// Route pour récupérer le token
-app.get("/api/csrf-token", csrfProtection, (req, res) => {
+app.get('/api/csrf-token', csrfProtection, (req, res) => {
   const token = req.csrfToken();
-  res.cookie("XSRF-TOKEN", token, {
+  res.cookie('XSRF-TOKEN', token, {
     httpOnly: false,
-    sameSite: "Lax",
     secure: isProd,
+    sameSite: 'None'
   });
   res.json({ csrfToken: token });
 });
 
-// appliquer CSRF aux méthodes d’écriture
-const requireCsrfForUnsafeMethods = (req, res, next) => {
-  if (["GET", "HEAD", "OPTIONS"].includes(req.method)) return next();
+// Only apply CSRF to unsafe methods
+const unsafe = (req, res, next) => {
+  if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();
   return csrfProtection(req, res, next);
 };
 
-// ===============================
-// Statics
-// ===============================
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// ------------------------------
+// Static
+// ------------------------------
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// ===============================
-// Routes API
-// ===============================
-app.use("/api/categories", categorieRoutes);
-app.use("/api/auth", requireCsrfForUnsafeMethods, authRoutes);
-app.use("/api/plats", requireCsrfForUnsafeMethods, platRoutes);
-app.use("/api/utilisateurs", requireCsrfForUnsafeMethods, utilisateurRoutes);
-app.use("/api/contact", requireCsrfForUnsafeMethods, contactRoutes);
+// ------------------------------
+// API ROUTES
+// ------------------------------
+app.use('/api/categories', categorieRoutes);
+app.use('/api/auth', unsafe, authRoutes);
+app.use('/api/plats', unsafe, platRoutes);
+app.use('/api/utilisateurs', unsafe, utilisateurRoutes);
+app.use('/api/contact', unsafe, contactRoutes);
 
-// ===============================
-// Erreurs CSRF & globales
-// ===============================
-
+// ------------------------------
+// Error handlers
+// ------------------------------
 app.use((err, req, res, next) => {
-  if (err.code === "EBADCSRFTOKEN") {
-    return res.status(403).json({ error: "Token CSRF invalide" });
+  if (err.code === 'EBADCSRFTOKEN') {
+    return res.status(403).json({ error: 'Invalid or missing CSRF token' });
   }
   next(err);
 });
 
 app.use((err, req, res, next) => {
-  console.error("🔥 ERREUR SERVEUR :", err);
-  res.status(500).json({ error: "Erreur serveur" });
+  console.error("❌ Erreur serveur :", err);
+  res.status(500).json({ error: 'Erreur serveur' });
 });
 
-// ===============================
-// Health check
-// ===============================
-app.get("/api/health", (req, res) => res.json({ ok: true }));
+// ------------------------------
+app.get('/', (req, res) => res.send("Backend OK • Render"));
 
-// ===============================
-// Lancement
-// ===============================
+// ------------------------------
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, async () => {
-  console.log("🚀 Serveur lancé sur port", PORT);
+  console.log(`🚀 Backend lancé`);
   try {
     await sequelize.authenticate();
     await sequelize.sync();
-    console.log("📦 Sequelize OK");
+    console.log("📌 PostgreSQL OK");
   } catch (e) {
-    console.error("❌ Sequelize ERROR :", e);
+    console.error("❌ Sequelize error :", e);
   }
 });
 
