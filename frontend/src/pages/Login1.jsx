@@ -5,15 +5,26 @@ import '../Style/Login.css';
 import { auth, signInWithEmailAndPassword } from '../firebaseClient';
 import { useAuth } from '../context/AuthContext';
 
-const API = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+// 🔗 Base URL de l'API
+// - en prod : Render (avec /api)
+// - en dev : localhost:5000/api
+const API =
+  process.env.REACT_APP_API_URL ||
+  (process.env.NODE_ENV === 'production'
+    ? 'https://gourmet-delight-anis.onrender.com/api'
+    : 'http://localhost:5000/api');
+
 const SHOW_RECAPTCHA = process.env.NODE_ENV !== 'test';
 
 // util timeout
 const fetchWithTimeout = async (url, options = {}, ms = 10000) => {
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), ms);
-  try { return await fetch(url, { ...options, signal: controller.signal }); }
-  finally { clearTimeout(id); }
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(id);
+  }
 };
 
 const Login = () => {
@@ -43,7 +54,9 @@ const Login = () => {
   const renderedRef = useRef(false);
 
   // Titre de page explicite
-  useEffect(() => { document.title = 'Connexion — Gourmet Delight'; }, []);
+  useEffect(() => {
+    document.title = 'Connexion — Gourmet Delight';
+  }, []);
 
   /* -------- reCAPTCHA : charger le script + rendre le widget (sans doublon) -------- */
   useEffect(() => {
@@ -92,7 +105,8 @@ const Login = () => {
   const validate = () => {
     const errs = {};
     if (!form.email.trim()) errs.email = 'L’email est requis.';
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) errs.email = "Format d’email invalide.";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim()))
+      errs.email = "Format d’email invalide.";
     if (!form.password?.trim()) errs.password = 'Le mot de passe est requis.';
     else if (form.password.length < 12) errs.password = 'Minimum 12 caractères.';
     return errs;
@@ -100,8 +114,14 @@ const Login = () => {
 
   // focus sur premier champ en erreur
   const focusFirstError = (errs) => {
-    if (errs.email && emailRef.current) { emailRef.current.focus(); return; }
-    if (errs.password && pwdRef.current) { pwdRef.current.focus(); return; }
+    if (errs.email && emailRef.current) {
+      emailRef.current.focus();
+      return;
+    }
+    if (errs.password && pwdRef.current) {
+      pwdRef.current.focus();
+      return;
+    }
   };
 
   const handleChange = (e) => {
@@ -112,11 +132,16 @@ const Login = () => {
   };
 
   const firebaseLogin = async () => {
-    try { await signInWithEmailAndPassword(auth, form.email, form.password); } catch {}
+    try {
+      await signInWithEmailAndPassword(auth, form.email, form.password);
+    } catch {
+      // on ignore les erreurs Firebase (optionnel)
+    }
   };
 
+  // 🔐 Récupération du token CSRF (via /api/csrf-token côté back)
   const getCsrfToken = async () => {
-    const res = await fetchWithTimeout(`${API}/api/csrf-token`, { credentials: 'include' }, 8000);
+    const res = await fetchWithTimeout(`${API}/csrf-token`, { credentials: 'include' }, 8000);
     if (!res.ok) throw new Error(`CSRF ${res.status}`);
     const data = await res.json();
     if (!data?.csrfToken) throw new Error('No CSRF token returned');
@@ -157,25 +182,37 @@ const Login = () => {
       setSubmitting(true);
       const csrfToken = await getCsrfToken();
 
-      const res = await fetchWithTimeout(`${API}/api/auth/login`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken,
+      const res = await fetchWithTimeout(
+        `${API}/auth/login`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken,
+          },
+          body: JSON.stringify({
+            email: form.email,
+            password: form.password,
+            mot_de_passe: form.password, // compat
+            recaptchaToken,
+          }),
         },
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password,
-          mot_de_passe: form.password, // compat
-          recaptchaToken,
-        }),
-      }, 12000);
+        12000
+      );
 
       const text = await res.text();
-      let data; try { data = JSON.parse(text); } catch { data = { message: text }; }
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = { message: text };
+      }
 
-      if (!res.ok) { setApiError(data?.message || `Erreur ${res.status} au login`); return; }
+      if (!res.ok) {
+        setApiError(data?.message || `Erreur ${res.status} au login`);
+        return;
+      }
 
       await refreshMe().catch(() => {});
       firebaseLogin().catch(() => {});
@@ -186,11 +223,20 @@ const Login = () => {
       localStorage.setItem('token', 'cookie');
 
       const from = location.state?.from?.pathname;
-      const target = from || (data?.user?.role === 'admin' ? '/admin/dashboard' : '/employe/dashboard');
-      try { navigate(target, { replace: true }); } catch {}
-      setTimeout(() => { if (window.location.pathname !== target) window.location.assign(target); }, 60);
+      const target =
+        from || (data?.user?.role === 'admin' ? '/admin/dashboard' : '/employe/dashboard');
+      try {
+        navigate(target, { replace: true });
+      } catch {}
+      setTimeout(() => {
+        if (window.location.pathname !== target) window.location.assign(target);
+      }, 60);
     } catch (error) {
-      setApiError(error.name === 'AbortError' ? 'La requête a expiré. Réessayez.' : 'Erreur réseau.');
+      setApiError(
+        error.name === 'AbortError'
+          ? 'La requête a expiré. Réessayez.'
+          : 'Erreur réseau.'
+      );
     } finally {
       setSubmitting(false);
       if (SHOW_RECAPTCHA && window.grecaptcha && widgetIdRef.current != null) {
@@ -203,9 +249,6 @@ const Login = () => {
 
   return (
     <main className="login-container" aria-label="Page de connexion">
-      {/* Lien d’évitement pour clavier */}
-      
-
       {/* Récapitulatif d’erreurs (annoncé aux lecteurs d’écran) */}
       <div
         ref={errorSummaryRef}
@@ -257,7 +300,11 @@ const Login = () => {
           required
           autoComplete="email"
         />
-        {errors.email && <span id={emailErrId} className="error">{errors.email}</span>}
+        {errors.email && (
+          <span id={emailErrId} className="error">
+            {errors.email}
+          </span>
+        )}
 
         <label htmlFor={pwdId}>Mot de passe</label>
         <input
@@ -273,7 +320,11 @@ const Login = () => {
           required
           autoComplete="current-password"
         />
-        {errors.password && <span id={pwdErrId} className="error">{errors.password}</span>}
+        {errors.password && (
+          <span id={pwdErrId} className="error">
+            {errors.password}
+          </span>
+        )}
 
         {/* reCAPTCHA v2 */}
         {SHOW_RECAPTCHA && (
@@ -286,13 +337,20 @@ const Login = () => {
           />
         )}
 
-        <button type="submit" disabled={submitting} aria-describedby={submitting ? 'submit-status' : undefined}>
+        <button
+          type="submit"
+          disabled={submitting}
+          aria-describedby={submitting ? 'submit-status' : undefined}
+        >
           {submitting ? 'Connexion…' : 'Se connecter'}
         </button>
 
-        <p id="submit-status" role="status" aria-live="polite" className="visually-hidden">
-          
-        </p>
+        <p
+          id="submit-status"
+          role="status"
+          aria-live="polite"
+          className="visually-hidden"
+        ></p>
       </form>
     </main>
   );
