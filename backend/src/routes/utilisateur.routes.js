@@ -1,7 +1,6 @@
-// src/routes/utilisateur.routes.js
+// 📁 src/routes/utilisateur.routes.js
 const express = require('express');
 const router = express.Router();
-
 
 // --- Controllers
 const {
@@ -16,51 +15,138 @@ const {
   createReservation,
   getAllReservations,
   getCurrentUtilisateur,
-  updateUtilisateur,            // ⬅️ AJOUT : contrôleur d’édition
+  updateUtilisateur,
 } = require('../controllers/utilisateur.controller');
 
-
-// --- AuthN/AuthZ
+// --- Middlewares Auth
 const { verifyToken, restrictTo } = require('../middleware/authMiddleware');
 
 
-// 🔐 Test admin
-router.get('/admin-only', verifyToken, restrictTo('admin'), (req, res) => {
-  res.json({ message: 'Bienvenue administrateur !' });
-});
+// -------------------------------------------------------
+// 🔐 TEST ADMIN
+// -------------------------------------------------------
+router.get(
+  '/admin-only',
+  verifyToken,
+  restrictTo('admin'),
+  (req, res) => {
+    res.json({ message: 'Bienvenue administrateur !' });
+  }
+);
 
 
-// 🔁 Vérifie existence utilisateur (Firebase ↔ Postgres)
+// -------------------------------------------------------
+// 🔄 Vérifie existence utilisateur Firebase ↔ PostgreSQL
+// -------------------------------------------------------
 router.post('/check', checkUtilisateurExistant);
 
 
-// 👤 CRUD utilisateurs (admin)
-router.post('/', verifyToken, restrictTo('admin'), createUtilisateur);
-router.get('/', verifyToken, restrictTo('admin'), getAllUtilisateurs);
-router.put('/:id', verifyToken, restrictTo('admin'), updateUtilisateur);   // ⬅️ AJOUT : MODIFIER
-router.patch('/:id', verifyToken, restrictTo('admin'), updateUtilisateur); // ⬅️ optionnel (PATCH)
-router.delete('/:id', verifyToken, restrictTo('admin'), deleteUtilisateur);
+// -------------------------------------------------------
+// 👤 CRUD UTILISATEURS (ADMIN UNIQUEMENT)
+// -------------------------------------------------------
+
+// ➕ Créer un employé
+router.post(
+  '/',
+  verifyToken,
+  restrictTo('admin'),
+  createUtilisateur
+);
+
+// 📄 Liste des employés
+router.get(
+  '/',
+  verifyToken,
+  restrictTo('admin'),
+  getAllUtilisateurs
+);
+
+// ✏️ Modifier un employé
+router.put(
+  '/:id',
+  verifyToken,
+  restrictTo('admin'),
+  updateUtilisateur
+);
+
+// ✏️ Modifier (PATCH également accepté)
+router.patch(
+  '/:id',
+  verifyToken,
+  restrictTo('admin'),
+  updateUtilisateur
+);
+
+// ❌ Supprimer un employé
+router.delete(
+  '/:id',
+  verifyToken,
+  restrictTo('admin'),
+  deleteUtilisateur
+);
 
 
-// 💬 Messages (responsable_communication)
-router.get('/messages', verifyToken, restrictTo('responsable_communication'), getMessages);
+// -------------------------------------------------------
+// 💬 MESSAGES (rôle : responsable_communication)
+// -------------------------------------------------------
+router.get(
+  '/messages',
+  verifyToken,
+  restrictTo('responsable_communication'),
+  getMessages
+);
 
 
-// ⭐ Avis (responsable_avis)
-router.get('/avis', verifyToken, restrictTo('responsable_avis'), getAvis);
-router.post('/avis/:id/repondre', verifyToken, restrictTo('responsable_avis'), repondreAvis);
+// -------------------------------------------------------
+// ⭐ AVIS (rôle : responsable_avis)
+// -------------------------------------------------------
+router.get(
+  '/avis',
+  verifyToken,
+  restrictTo('responsable_avis'),
+  getAvis
+);
+
+router.post(
+  '/avis/:id/repondre',
+  verifyToken,
+  restrictTo('responsable_avis'),
+  repondreAvis
+);
 
 
-// 📝 Contenu (gestionnaire_contenu)
-router.put('/contenu/:page', verifyToken, restrictTo('gestionnaire_contenu'), updatePageContent);
+// -------------------------------------------------------
+// 📝 CONTENU DU SITE (rôle : gestionnaire_contenu)
+// -------------------------------------------------------
+router.put(
+  '/contenu/:page',
+  verifyToken,
+  restrictTo('gestionnaire_contenu'),
+  updatePageContent
+);
 
 
-// 🍽️ Réservations (maître d’hôtel)
-router.post('/reservation', verifyToken, restrictTo('maitre_hotel'), createReservation);
-router.get('/reservations', verifyToken, restrictTo('maitre_hotel'), getAllReservations);
+// -------------------------------------------------------
+// 🍽️ RÉSERVATIONS (rôle : maitre_hotel)
+// -------------------------------------------------------
+router.post(
+  '/reservation',
+  verifyToken,
+  restrictTo('maitre_hotel'),
+  createReservation
+);
+
+router.get(
+  '/reservations',
+  verifyToken,
+  restrictTo('maitre_hotel'),
+  getAllReservations
+);
 
 
-// 👤 Moi
+// -------------------------------------------------------
+// 👤 PROFIL UTILISATEUR ACTUEL
+// -------------------------------------------------------
 router.get('/me', verifyToken, getCurrentUtilisateur);
 
 
