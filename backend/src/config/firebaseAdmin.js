@@ -1,30 +1,32 @@
 
 // ✅ backend/src/config/firebaseAdmin.js
 
+const admin = require('firebase-admin');
+const fs = require('fs');
+const path = require('path');
 
-const { initializeApp, cert } = require('firebase-admin/app');
-const { getFirestore } = require('firebase-admin/firestore');
 let serviceAccount;
 
-// En production (Render) : on lit le fichier secret
-if (process.env.FIREBASE_KEY_PATH) {
-  const keyPath = process.env.FIREBASE_KEY_PATH;
-  serviceAccount = require(keyPath);
+if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+  // En production : la clé vient d'une variable d'environnement
+  try {
+    serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    console.log("🔥 Firebase : clé chargée depuis ENV (Render)");
+  } catch (error) {
+    console.error("❌ Erreur en lisant FIREBASE_SERVICE_ACCOUNT :", error);
+    throw error;
+  }
 } else {
-  // En local : on continue d'utiliser le fichier classique NON poussé sur GitHub
+  // En local : on utilise le fichier
   const localPath = path.join(__dirname, '../../serviceAccountKey.json');
-  serviceAccount = require(localPath);
+  serviceAccount = JSON.parse(fs.readFileSync(localPath));
+  console.log("💻 Firebase : clé chargée depuis le fichier local");
 }
 
-
-
-
-// 🔐 Initialisation de Firebase Admin SDK
-initializeApp({
-  credential: cert(serviceAccount)
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
 });
 
-
-// 📦 Export de l'instance Firestore
-const db = getFirestore();
+const db = admin.firestore();
 module.exports = db;
+
