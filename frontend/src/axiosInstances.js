@@ -1,5 +1,5 @@
 import axios from "axios";
-import "../interceptors/axiosInterceptor"; // <-- IMPORTANT : pour activer l'intercepteur CSRF
+import "./interceptors/axiosInterceptor"; // <-- IMPORTANT : pour activer l'intercepteur CSRF
 
 
 // 🔗 URL du backend Render (automatique via .env)
@@ -10,4 +10,5 @@ const api = axios.create({
 
 
 export default api;
+
 
