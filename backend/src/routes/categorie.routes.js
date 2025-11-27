@@ -1,30 +1,25 @@
-// backend/src/routes/categorie.routes.js
-
 const router = require('express').Router();
 const {
-  getAllCategories,
-  createCategory,
-  deleteCategory
+  getAll,
+  getOne,
+  create,
+  update,
+  remove,
 } = require('../controllers/categorie.controller');
 
-// Auth middleware
-const { verifyToken, restrictTo } = require('../middleware/authMiddleware');
+// Lister toutes les catégories
+router.get('/', getAll);
 
-// -------------------------------------
-// 📌 PUBLIC : récupérer toutes les catégories
-// -> aucune authentification nécessaire
-// -------------------------------------
-router.get('/', getAllCategories);
+// Lire une catégorie par id
+router.get('/:id', getOne);
 
-// -------------------------------------
-// 📌 ADMIN : créer une catégorie
-// -------------------------------------
-router.post('/', verifyToken, restrictTo('admin'), createCategory);
+// Créer une catégorie
+router.post('/', create);
 
-// -------------------------------------
-// 📌 ADMIN : supprimer une catégorie
-// -------------------------------------
-router.delete('/:id', verifyToken, restrictTo('admin'), deleteCategory);
+// Modifier une catégorie
+router.put('/:id', update);
+
+// Supprimer une catégorie
+router.delete('/:id', remove);
 
 module.exports = router;
-
