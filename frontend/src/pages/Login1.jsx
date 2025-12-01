@@ -5,33 +5,26 @@ import '../Style/Login.css';
 import { auth, signInWithEmailAndPassword } from '../firebaseClient';
 import { useAuth } from '../context/AuthContext';
 
-
 // 🔧 Normalisation de l’URL API (enlève les / de fin et un éventuel /api)
 const normalizeApi = (url) => {
   const fallback = 'http://localhost:5000';
   if (!url) return fallback;
 
-
   let clean = url.trim();
-
 
   // enlève les / à la fin
   clean = clean.replace(/\/+$/, '');
-
 
   // si ça se termine par /api ou /api/ → on enlève /api
   if (clean.toLowerCase().endsWith('/api')) {
     clean = clean.slice(0, -4);
   }
 
-
   return clean || fallback;
 };
 
-
 const API = normalizeApi(process.env.REACT_APP_API_URL);
 const SHOW_RECAPTCHA = process.env.NODE_ENV !== 'test';
-
 
 // util timeout
 const fetchWithTimeout = async (url, options = {}, ms = 10000) => {
@@ -44,18 +37,15 @@ const fetchWithTimeout = async (url, options = {}, ms = 10000) => {
   }
 };
 
-
 const Login = () => {
   const [form, setForm] = useState({ email: '', password: '' });
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-
   const navigate = useNavigate();
   const location = useLocation();
   const { refreshMe } = useAuth();
-
 
   // IDs stables & accessibles
   const emailId = useId();
@@ -63,35 +53,29 @@ const Login = () => {
   const emailErrId = `${emailId}-err`;
   const pwdErrId = `${pwdId}-err`;
 
-
   // Gestion du focus
   const errorSummaryRef = useRef(null);
   const emailRef = useRef(null);
   const pwdRef = useRef(null);
-
 
   // reCAPTCHA
   const recaptchaRef = useRef(null);
   const widgetIdRef = useRef(null);
   const renderedRef = useRef(false);
 
-
   // Titre de page explicite
   useEffect(() => {
     document.title = 'Connexion — Gourmet Delight';
   }, []);
 
-
   /* -------- reCAPTCHA : charger le script + rendre le widget (sans doublon) -------- */
   useEffect(() => {
     if (!SHOW_RECAPTCHA) return;
-
 
     const renderWidget = () => {
       if (renderedRef.current) return;
       if (!window.grecaptcha || typeof window.grecaptcha.render !== 'function') return;
       if (!recaptchaRef.current) return;
-
 
       widgetIdRef.current = window.grecaptcha.render(recaptchaRef.current, {
         sitekey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // clé TEST v2
@@ -102,12 +86,10 @@ const Login = () => {
       renderedRef.current = true;
     };
 
-
     if (window.grecaptcha && typeof window.grecaptcha.render === 'function') {
       renderWidget();
       return;
     }
-
 
     if (!document.querySelector('#recaptcha-script')) {
       const s = document.createElement('script');
@@ -119,7 +101,6 @@ const Login = () => {
       document.body.appendChild(s);
     }
 
-
     const t = setInterval(() => {
       if (window.grecaptcha && typeof window.grecaptcha.render === 'function') {
         clearInterval(t);
@@ -127,10 +108,8 @@ const Login = () => {
       }
     }, 200);
 
-
     return () => clearInterval(t);
   }, []);
-
 
   // validation
   const validate = () => {
@@ -141,17 +120,14 @@ const Login = () => {
       errs.email = "Format d’email invalide.";
     }
 
-
     if (!form.password?.trim()) {
       errs.password = 'Le mot de passe est requis.';
     } else if (form.password.length < 12) {
       errs.password = 'Minimum 12 caractères.';
     }
 
-
     return errs;
   };
-
 
   // focus sur premier champ en erreur
   const focusFirstError = (errs) => {
@@ -164,14 +140,12 @@ const Login = () => {
     }
   };
 
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((p) => ({ ...p, [name]: value }));
     setErrors((p) => ({ ...p, [name]: '' }));
     setApiError('');
   };
-
 
   const firebaseLogin = async () => {
     try {
@@ -181,12 +155,12 @@ const Login = () => {
     }
   };
 
-
   const getCsrfToken = async () => {
-    const res = await fetchWithTimeout(`${API}/api/csrf-token`, {
-      credentials: 'include',
-    }, 8000);
-
+    const res = await fetchWithTimeout(
+      `${API}/api/csrf-token`,
+      { credentials: 'include' },
+      8000
+    );
 
     if (!res.ok) throw new Error(`CSRF ${res.status}`);
     const data = await res.json();
@@ -194,11 +168,9 @@ const Login = () => {
     return data.csrfToken;
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setApiError('');
-
 
     const errs = validate();
     if (Object.keys(errs).length) {
@@ -210,7 +182,6 @@ const Login = () => {
       });
       return;
     }
-
 
     // reCAPTCHA
     let recaptchaToken = 'dev';
@@ -227,27 +198,28 @@ const Login = () => {
       }
     }
 
-
     try {
       setSubmitting(true);
       const csrfToken = await getCsrfToken();
 
-
-      const res = await fetchWithTimeout(`${API}/api/auth/login`, {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': csrfToken,
+      const res = await fetchWithTimeout(
+        `${API}/api/auth/login`,
+        {
+          method: 'POST',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': csrfToken,
+          },
+          body: JSON.stringify({
+            email: form.email,
+            password: form.password,
+            mot_de_passe: form.password, // compat
+            recaptchaToken,
+          }),
         },
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password,
-          mot_de_passe: form.password, // compat
-          recaptchaToken,
-        }),
-      }, 12000);
-
+        12000
+      );
 
       const text = await res.text();
       let data;
@@ -257,37 +229,32 @@ const Login = () => {
         data = { message: text };
       }
 
-
       if (!res.ok) {
         setApiError(data?.message || `Erreur ${res.status} au login`);
         return;
       }
 
-
+      // met à jour le contexte utilisateur
       await refreshMe().catch(() => {});
       firebaseLogin().catch(() => {});
 
-
+      // on garde les infos utiles
       if (data?.user) {
         localStorage.setItem('role', data.user.role || '');
         localStorage.setItem('prenom', data.user.prenom || '');
       }
-      
-//  si le backend renvoie un JWT, on le stocke
-if (data?.token) {
-  localStorage.setItem('token', data.token);
-} else {
-  // par sécurité, on enlève tout ancien token
-  localStorage.removeItem('token');
-}
 
-
-
+      // ✅ si le backend renvoie un JWT, on le stocke
+      if (data?.token) {
+        localStorage.setItem('token', data.token);
+      } else {
+        // par sécurité, on enlève tout ancien token
+        localStorage.removeItem('token');
+      }
 
       const from = location.state?.from?.pathname;
       const target =
         from || (data?.user?.role === 'admin' ? '/admin/dashboard' : '/employe/dashboard');
-
 
       try {
         navigate(target, { replace: true });
@@ -295,7 +262,6 @@ if (data?.token) {
         // fallback hard reload
         window.location.assign(target);
       }
-
 
       setTimeout(() => {
         if (window.location.pathname !== target) {
@@ -316,9 +282,7 @@ if (data?.token) {
     }
   };
 
-
   const hasErrors = Boolean(errors.email || errors.password);
-
 
   return (
     <main className="login-container" aria-label="Page de connexion">
@@ -339,7 +303,6 @@ if (data?.token) {
         )}
       </div>
 
-
       <form
         id="login-form"
         className="login-form"
@@ -350,14 +313,12 @@ if (data?.token) {
       >
         <h1>Connexion</h1>
 
-
         {/* Erreur API (annoncée aux lecteurs d’écran) */}
         {apiError && (
           <p id="api-error" className="error" role="alert" aria-live="assertive">
             {apiError}
           </p>
         )}
-
 
         <label htmlFor={emailId}>Email</label>
         <input
@@ -382,7 +343,6 @@ if (data?.token) {
           </span>
         )}
 
-
         <label htmlFor={pwdId}>Mot de passe</label>
         <input
           ref={pwdRef}
@@ -403,7 +363,6 @@ if (data?.token) {
           </span>
         )}
 
-
         {/* reCAPTCHA v2 */}
         {SHOW_RECAPTCHA && (
           <div
@@ -415,7 +374,6 @@ if (data?.token) {
           />
         )}
 
-
         <button
           type="submit"
           disabled={submitting}
@@ -423,7 +381,6 @@ if (data?.token) {
         >
           {submitting ? 'Connexion…' : 'Se connecter'}
         </button>
-
 
         <p
           id="submit-status"
@@ -436,7 +393,5 @@ if (data?.token) {
   );
 };
 
-
 export default Login;
-
 
