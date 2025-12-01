@@ -28,7 +28,6 @@ exports.login = async (req, res) => {
     }
 
     // 3) (Optionnel) tu pourrais vérifier recaptchaToken ici côté serveur
-    // Pour l’instant on ne bloque pas dessus
     if (!recaptchaToken) {
       console.log('LOGIN INFO -> aucun recaptchaToken reçu (dev mode)');
     }
@@ -45,7 +44,7 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: 'Utilisateur non trouvé.' });
     }
 
-    // 5) Récupération du hash (selon le nom de ta colonne)
+    // 5) Récupération du hash
     const hash = user.mot_de_passe ?? user.password;
     if (!hash) {
       return res
@@ -72,17 +71,21 @@ exports.login = async (req, res) => {
       expiresIn: TOKEN_DURATION,
     });
 
-    // 8) Envoi du token en cookie httpOnly
+    const isProd = process.env.NODE_ENV === 'production';
+
+    // 8) Envoi du token en cookie httpOnly (pour le backend)
+    //    + dans le JSON (pour ton localStorage côté front)
     res
       .cookie('token', token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'Lax',
-        maxAge: 24 * 60 * 60 * 1000, // 24h
+        secure: isProd,                             // HTTPS en prod
+        sameSite: isProd ? 'None' : 'Lax',         // nécessaire pour Netlify → Render
+        maxAge: 24 * 60 * 60 * 1000,               // 24h
       })
       .status(200)
       .json({
         message: 'Connexion réussie.',
+        token, // 🔴 important : c’est ça que ton front lit (data.token)
         user: {
           id: payload.id,
           email: payload.email,
@@ -98,7 +101,6 @@ exports.login = async (req, res) => {
 
 // -----------------------------------------------------
 // 🧾 Inscription utilisateur (POST /api/auth/register)
-// (peut servir à créer le premier admin ou des comptes publics)
 // -----------------------------------------------------
 exports.register = async (req, res) => {
   try {
