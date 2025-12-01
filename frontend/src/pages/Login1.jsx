@@ -301,7 +301,7 @@ if (data?.token) {
         if (window.location.pathname !== target) {
           window.location.assign(target);
         }
-      }, 120);
+      }, 70);
     } catch (error) {
       setApiError(
         error.name === 'AbortError'
