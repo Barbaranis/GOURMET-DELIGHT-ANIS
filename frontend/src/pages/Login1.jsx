@@ -272,8 +272,16 @@ const Login = () => {
         localStorage.setItem('role', data.user.role || '');
         localStorage.setItem('prenom', data.user.prenom || '');
       }
-      // on indique qu’on utilise le cookie httpOnly
-      localStorage.setItem('token', 'cookie');
+      
+//  si le backend renvoie un JWT, on le stocke
+if (data?.token) {
+  localStorage.setItem('token', data.token);
+} else {
+  // par sécurité, on enlève tout ancien token
+  localStorage.removeItem('token');
+}
+
+
 
 
       const from = location.state?.from?.pathname;
